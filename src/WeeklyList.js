@@ -6,7 +6,7 @@ function WeeklyList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDedroW32p1r5ZlgDopHYKsn3RSUZ94-OxQPp__SXN7e-vcDZG0WMHf9TjIg4DhRNU/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
   useEffect(() => {
     fetchWeeklyPlayers();
@@ -30,10 +30,20 @@ function WeeklyList() {
   const handleDelete = async (rowIndex) => {
     if (window.confirm('Are you sure you want to delete this player?')) {
       try {
-        const response = await fetch(`${SCRIPT_URL}?row=${rowIndex + 2}`, { // +2 because of header row and 0-based index
-          method: 'DELETE',
+        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+          method: 'GET',  // Changed from DELETE to GET
           mode: 'no-cors'
         });
+
+        // Refresh the list after deletion
+        await fetchWeeklyPlayers();
+
+      } catch (error) {
+        console.error('Error deleting player:', error);
+        alert('Failed to delete player. Please try again.');
+      }
+    }
+  };
 
         // Since we can't read the response due to no-cors, we'll assume success
         // Remove player from local state

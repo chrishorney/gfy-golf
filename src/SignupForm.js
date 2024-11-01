@@ -12,7 +12,7 @@ function SignupForm() {
   const navigate = useNavigate();
 
   // Replace with your actual Google Apps Script URL
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDedroW32p1r5ZlgDopHYKsn3RSUZ94-OxQPp__SXN7e-vcDZG0WMHf9TjIg4DhRNU/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
