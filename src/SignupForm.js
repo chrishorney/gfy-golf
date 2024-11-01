@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Add this import
+import { useNavigate } from 'react-router-dom';
 import './SignupForm.css';
 
 function SignupForm() {
@@ -9,7 +9,7 @@ function SignupForm() {
     handicap: ''
   });
   const [submitStatus, setSubmitStatus] = useState('');
-  const navigate = useNavigate();  // Add this line
+  const navigate = useNavigate();
 
   // Replace with your actual Google Apps Script URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOHUfMQr_hpi9TLq3Wi4MBnSJ9w0Yr6LYFM41pQPFS5jy-Qm0f5pSr1gZXqq-7hMTJ/exec';
@@ -40,15 +40,19 @@ function SignupForm() {
       setSubmitStatus('success');
       setFormData({ firstName: '', lastName: '', handicap: '' });
 
-      // Add navigation after successful submission
       setTimeout(() => {
         navigate('/weekly');
-      }, 1500); // Wait 1.5 seconds before redirecting
+      }, 1500);
 
     } catch (error) {
       console.error('Error:', error);
       setSubmitStatus('error');
     }
+  };
+
+  // Add this function to handle the view list button click
+  const handleViewList = () => {
+    navigate('/weekly');
   };
 
   return (
@@ -101,6 +105,15 @@ function SignupForm() {
           disabled={submitStatus === 'submitting'}
         >
           {submitStatus === 'submitting' ? 'Submitting...' : 'Sign Up'}
+        </button>
+
+        {/* Add the View List button */}
+        <button 
+          type="button" 
+          className="view-list-button"
+          onClick={handleViewList}
+        >
+          View Weekly List
         </button>
 
         {submitStatus === 'success' && (
