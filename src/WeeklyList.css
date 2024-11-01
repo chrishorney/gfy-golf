@@ -41,7 +41,7 @@
 
 .players-list table {
     width: 100%;
-    border-collapse: separate; /* Changed from collapse */
+    border-collapse: separate;
     border-spacing: 0;
     position: relative;
 }
@@ -72,7 +72,6 @@
     background: white;
 }
 
-/* Delete action container */
 .delete-action {
     position: absolute;
     right: -80px;
@@ -84,12 +83,10 @@
     transition: right 0.3s ease;
     background: white;
     width: 80px;
-    visibility: hidden; /* Hide by default */
-    opacity: 0; /* Start fully transparent */
-    transition: all 0.3s ease; /* Smooth transition for all properties */
+    visibility: hidden;
+    opacity: 0;
 }
 
-/* Show delete button when row is swiped */
 .player-row.swiped .delete-action {
     right: 0;
     visibility: visible;
@@ -125,7 +122,6 @@
     color: #dc3545;
 }
 
-/* Mobile Optimizations */
 @media (max-width: 600px) {
     .weekly-list-container {
         padding: 0.5rem;
@@ -150,11 +146,10 @@
     }
 
     .player-row {
-        touch-action: pan-x; /* Changed to only allow horizontal swipes */
+        touch-action: pan-x;
     }
 }
 
-/* Prevent text selection during swipe */
 .player-row {
     user-select: none;
     -webkit-user-select: none;
@@ -162,7 +157,6 @@
     -ms-user-select: none;
 }
 
-/* Hide horizontal overflow but allow swipe */
 .players-list {
     overflow-x: hidden;
 }
