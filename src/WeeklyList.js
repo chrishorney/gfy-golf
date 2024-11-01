@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSwipeable } from 'react-swipeable';
 import './WeeklyList.css';
 
 function WeeklyList() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [swipedRowId, setSwipedRowId] = useState(null);
   const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
@@ -37,12 +39,11 @@ function WeeklyList() {
           mode: 'no-cors'
         });
 
-        // Remove player from local state
+        setSwipedRowId(null);
         setPlayers(currentPlayers => 
           currentPlayers.filter((_, index) => index !== rowIndex)
         );
 
-        // Refresh the list after deletion
         await fetchWeeklyPlayers();
 
       } catch (error) {
@@ -55,6 +56,13 @@ function WeeklyList() {
   const handleBackToSignup = () => {
     navigate('/');
   };
+
+  const swipeHandlers = (index) => useSwipeable({
+    onSwipedLeft: () => setSwipedRowId(index),
+    onSwipedRight: () => setSwipedRowId(null),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true
+  });
 
   if (loading) return <div className="loading">Loading players...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -80,16 +88,19 @@ function WeeklyList() {
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Handicap</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
               {players.map((player, index) => (
-                <tr key={index}>
+                <tr 
+                  key={index}
+                  {...swipeHandlers(index)}
+                  className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
+                >
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
-                  <td>
+                  <td className="delete-action">
                     <button 
                       onClick={() => handleDelete(player.rowIndex)}
                       className="delete-button"

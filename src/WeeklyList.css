@@ -2,87 +2,66 @@
     max-width: 800px;
     margin: 2rem auto;
     padding: 1rem;
-  }
-  
-  .players-list table {
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+/* Table Styles */
+.players-list table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
     background: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .players-list th,
-  .players-list td {
+}
+
+.players-list th,
+.players-list td {
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
-  }
-  
-  .players-list th {
+}
+
+.players-list th {
     background: #f5f5f5;
     font-weight: 600;
-  }
-  
-  .players-list tr:hover {
-    background: #f9f9f9;
-  }
-  
-  .loading {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
-  
-  .error {
-    text-align: center;
-    padding: 2rem;
-    color: #ff4444;
-  }
-  .delete-button {
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
+}
+
+/* Swipe Row Styles */
+.player-row {
+    position: relative;
+    transition: transform 0.3s ease;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .delete-button:hover {
-    background-color: #cc0000;
-  }
-  
-  .weekly-list-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  
-  .weekly-list-container th,
-  .weekly-list-container td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .weekly-list-container th {
-    background-color: #f5f5f5;
-    font-weight: bold;
-  }
-  
-  .weekly-list-container tr:hover {
-    background-color: #f9f9f9;
-  }
-  .header-section {
+}
+
+.player-row td {
+    position: relative;
+    background: white;
+    transition: transform 0.3s ease;
+}
+
+.delete-action {
+    position: absolute;
+    right: -100px;
+    top: 0;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-  }
-  
-  .back-button {
+    transition: right 0.3s ease;
+    background: white;
+}
+
+.player-row.swiped .delete-action {
+    right: 0;
+}
+
+/* Button Styles */
+.back-button {
     padding: 0.75rem 1.5rem;
     background-color: #2196F3;
     color: white;
@@ -91,8 +70,36 @@
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s ease;
-  }
-  
-  .back-button:hover {
+}
+
+.back-button:hover {
     background-color: #1976D2;
-  }
+}
+
+.delete-button {
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
+}
+
+/* Status Messages */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: #ff4444;
+}
