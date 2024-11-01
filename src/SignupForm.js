@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Add this import
 import './SignupForm.css';
 
 function SignupForm() {
@@ -8,6 +9,7 @@ function SignupForm() {
     handicap: ''
   });
   const [submitStatus, setSubmitStatus] = useState('');
+  const navigate = useNavigate();  // Add this line
 
   // Replace with your actual Google Apps Script URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOHUfMQr_hpi9TLq3Wi4MBnSJ9w0Yr6LYFM41pQPFS5jy-Qm0f5pSr1gZXqq-7hMTJ/exec';
@@ -37,6 +39,11 @@ function SignupForm() {
 
       setSubmitStatus('success');
       setFormData({ firstName: '', lastName: '', handicap: '' });
+
+      // Add navigation after successful submission
+      setTimeout(() => {
+        navigate('/weekly');
+      }, 1500); // Wait 1.5 seconds before redirecting
 
     } catch (error) {
       console.error('Error:', error);
