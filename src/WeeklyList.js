@@ -57,8 +57,12 @@ function WeeklyList() {
     navigate('/');
   };
 
-  const swipeHandlers = (index) => useSwipeable({
-    onSwipedLeft: () => setSwipedRowId(index),
+  // Fixed swipe handlers
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: (eventData) => {
+      const rowId = parseInt(eventData.event.target.closest('tr').dataset.rowIndex);
+      setSwipedRowId(rowId);
+    },
     onSwipedRight: () => setSwipedRowId(null),
     preventDefaultTouchmoveEvent: true,
     trackMouse: true
@@ -94,7 +98,8 @@ function WeeklyList() {
               {players.map((player, index) => (
                 <tr 
                   key={index}
-                  {...swipeHandlers(index)}
+                  data-row-index={index}
+                  {...swipeHandlers}
                   className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
                 >
                   <td>{player.firstName}</td>
