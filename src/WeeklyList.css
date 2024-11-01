@@ -42,6 +42,7 @@
 .players-list table {
     width: 100%;
     border-collapse: collapse;
+    position: relative; /* Added for delete button positioning */
 }
 
 .players-list th,
@@ -49,6 +50,7 @@
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
+    position: relative; /* Added for delete button positioning */
 }
 
 .players-list th {
@@ -63,25 +65,26 @@
     background: white;
 }
 
+/* Style for the row container */
 .player-row td {
     background: white;
 }
 
-.player-row:hover {
-    background-color: #f8f9fa;
-}
-
+/* Delete action container */
 .delete-action {
     position: absolute;
-    right: -100px;
+    right: -80px; /* Slightly smaller offset */
     top: 0;
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
     transition: right 0.3s ease;
     background: white;
+    width: 80px; /* Fixed width for delete button area */
 }
 
+/* Show delete button when row is swiped */
 .player-row.swiped .delete-action {
     right: 0;
 }
@@ -96,6 +99,7 @@
     font-size: 0.9rem;
     transition: background-color 0.3s ease;
     white-space: nowrap;
+    width: 70px; /* Fixed width for consistency */
 }
 
 .delete-button:hover {
@@ -142,10 +146,6 @@
     .player-row {
         touch-action: pan-y pinch-zoom;
     }
-
-    .delete-action {
-        right: -80px; /* Slightly smaller on mobile */
-    }
 }
 
 /* Prevent text selection during swipe */
@@ -154,4 +154,21 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+}
+
+/* Hide horizontal overflow but allow swipe */
+.players-list {
+    overflow-x: hidden;
+}
+
+/* Ensure delete buttons don't show by default */
+.delete-action {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Show delete button on swipe */
+.player-row.swiped .delete-action {
+    visibility: visible;
+    opacity: 1;
 }
