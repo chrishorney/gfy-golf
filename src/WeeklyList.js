@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './WeeklyList.css';
 
 function WeeklyList() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
@@ -50,12 +52,24 @@ function WeeklyList() {
     }
   };
 
+  const handleBackToSignup = () => {
+    navigate('/');
+  };
+
   if (loading) return <div className="loading">Loading players...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="weekly-list-container">
-      <h2>This Week's Players</h2>
+      <div className="header-section">
+        <h2>This Week's Players</h2>
+        <button 
+          onClick={handleBackToSignup}
+          className="back-button"
+        >
+          Back to Signup
+        </button>
+      </div>
       <div className="players-list">
         {players.length === 0 ? (
           <p>No players signed up yet this week</p>
