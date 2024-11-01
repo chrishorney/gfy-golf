@@ -53,6 +53,19 @@ function WeeklyList() {
     navigate('/');
   };
 
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: (eventData) => {
+      const row = eventData.event.target.closest('tr');
+      if (row) {
+        const rowId = parseInt(row.dataset.rowIndex);
+        setSwipedRowId(rowId);
+      }
+    },
+    onSwipedRight: () => setSwipedRowId(null),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
+
   return (
     <div className="weekly-list-container">
       <div className="header-section">
@@ -77,35 +90,26 @@ function WeeklyList() {
               </tr>
             </thead>
             <tbody>
-              {players.map((player, index) => {
-                const swipeHandlers = useSwipeable({
-                  onSwipedLeft: () => setSwipedRowId(index),
-                  onSwipedRight: () => setSwipedRowId(null),
-                  preventDefaultTouchmoveEvent: true,
-                  trackMouse: true,
-                });
-
-                return (
-                  <tr 
-                    key={index}
-                    data-row-index={index}
-                    {...swipeHandlers}
-                    className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
-                  >
-                    <td>{player.firstName}</td>
-                    <td>{player.lastName}</td>
-                    <td>{player.handicap}</td>
-                    <td className="delete-action">
-                      <button 
-                        onClick={() => handleDelete(player.rowIndex)}
-                        className="delete-button"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+              {players.map((player, index) => (
+                <tr 
+                  key={index}
+                  data-row-index={index}
+                  {...swipeHandlers}
+                  className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
+                >
+                  <td>{player.firstName}</td>
+                  <td>{player.lastName}</td>
+                  <td>{player.handicap}</td>
+                  <td className="delete-action">
+                    <button 
+                      onClick={() => handleDelete(player.rowIndex)}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
