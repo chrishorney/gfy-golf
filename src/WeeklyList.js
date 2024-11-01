@@ -31,25 +31,17 @@ function WeeklyList() {
     if (window.confirm('Are you sure you want to delete this player?')) {
       try {
         await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
-          method: 'GET',  // Changed from DELETE to GET
+          method: 'GET',
           mode: 'no-cors'
         });
 
-        // Refresh the list after deletion
-        await fetchWeeklyPlayers();
-
-      } catch (error) {
-        console.error('Error deleting player:', error);
-        alert('Failed to delete player. Please try again.');
-      }
-    }
-  };
-
-        // Since we can't read the response due to no-cors, we'll assume success
         // Remove player from local state
         setPlayers(currentPlayers => 
           currentPlayers.filter((_, index) => index !== rowIndex)
         );
+
+        // Refresh the list after deletion
+        await fetchWeeklyPlayers();
 
       } catch (error) {
         console.error('Error deleting player:', error);
@@ -85,7 +77,7 @@ function WeeklyList() {
                   <td>{player.handicap}</td>
                   <td>
                     <button 
-                      onClick={() => handleDelete(index)}
+                      onClick={() => handleDelete(player.rowIndex)}
                       className="delete-button"
                     >
                       Delete
