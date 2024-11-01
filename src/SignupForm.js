@@ -9,8 +9,8 @@ function SignupForm() {
   });
   const [submitStatus, setSubmitStatus] = useState('');
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUpTTbPH5BzgUm3eVTzf9Ji0cIrxK4kXWuRT8gnqUb8pJqE55RQIJFCHT16f2E5TKZ/exec
-'; // Replace with your actual URL
+  // Replace with your actual Google Apps Script URL
+  const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR-SCRIPT-ID/exec';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,7 +25,6 @@ function SignupForm() {
     setSubmitStatus('submitting');
 
     try {
-      // Create URL with parameters
       const url = new URL(SCRIPT_URL);
       Object.keys(formData).forEach(key => {
         url.searchParams.append(key, formData[key]);
@@ -36,7 +35,6 @@ function SignupForm() {
         mode: 'no-cors'
       });
 
-      // Since we're using no-cors, we assume success if no error is thrown
       setSubmitStatus('success');
       setFormData({ firstName: '', lastName: '', handicap: '' });
 
@@ -95,13 +93,7 @@ function SignupForm() {
           className="submit-button"
           disabled={submitStatus === 'submitting'}
         >
-          {submitStatus === 'submitting' ? (
-            <span className="spinner">
-              <span className="spinner-inner"></span>
-            </span>
-          ) : (
-            'Sign Up'
-          )}
+          {submitStatus === 'submitting' ? 'Submitting...' : 'Sign Up'}
         </button>
 
         {submitStatus === 'success' && (
