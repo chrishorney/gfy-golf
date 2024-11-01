@@ -1,12 +1,17 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SignupForm from './SignupForm';
+import WeeklyList from './WeeklyList';
 
 function App() {
   return (
-    <div className="App">
-      <SignupForm />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignupForm />} />
+        <Route path="/weekly" element={<WeeklyList />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
 }
 
