@@ -11,7 +11,6 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  // Replace with your actual Google Apps Script URL
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
   const handleChange = (e) => {
@@ -28,6 +27,8 @@ function SignupForm() {
 
     try {
       const url = new URL(SCRIPT_URL);
+      // Add action parameter to specify we're adding a player
+      url.searchParams.append('action', 'addPlayer');
       Object.keys(formData).forEach(key => {
         url.searchParams.append(key, formData[key]);
       });
@@ -50,7 +51,6 @@ function SignupForm() {
     }
   };
 
-  // Add this function to handle the view list button click
   const handleViewList = () => {
     navigate('/weekly');
   };
@@ -107,7 +107,6 @@ function SignupForm() {
           {submitStatus === 'submitting' ? 'Submitting...' : 'Sign Up'}
         </button>
 
-        {/* Add the View List button */}
         <button 
           type="button" 
           className="view-list-button"
