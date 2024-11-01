@@ -10,8 +10,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
 
   // Replace with your actual Google Apps Script URL
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUpTTbPH5BzgUm3eVTzf9Ji0cIrxK4kXWuRT8gnqUb8pJqE55RQIJFCHT16f2E5TKZ/exec
-';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUpTTbPH5BzgUm3eVTzf9Ji0cIrxK4kXWuRT8gnqUb8pJqE55RQIJFCHT16f2E5TKZ/exec';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
