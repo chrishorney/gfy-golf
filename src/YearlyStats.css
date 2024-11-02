@@ -1,15 +1,19 @@
 .stats-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
+    max-width: 100%; /* Changed from 1200px to use full width */
+    margin: 0;       /* Remove margins */
+    padding: 0;      /* Remove padding */
+    height: 100vh;   /* Use full viewport height */
+    display: flex;
+    flex-direction: column;
 }
 
 .header-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding: 0 1rem;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-section h2 {
@@ -33,21 +37,29 @@
 }
 
 .tableau-container {
+    flex: 1;         /* Take up remaining space */
     width: 100%;
     background: white;
-    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
+}
+
+/* Make the Tableau viz fill the container */
+.tableauPlaceholder {
+    width: 100% !important;
+    height: calc(100vh - 80px) !important; /* Subtract header height */
+}
+
+.tableauViz {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 @media (max-width: 600px) {
-    .stats-container {
-        padding: 0.5rem;
-        margin: 1rem auto;
-    }
-
     .header-section {
-        padding: 0 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .tableauPlaceholder {
+        height: calc(100vh - 60px) !important; /* Adjust for smaller header on mobile */
     }
 }
