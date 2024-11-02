@@ -35,9 +35,10 @@
 .players-list {
     background: white;
     border-radius: 8px;
-    overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
 }
 
 .players-list table {
@@ -67,11 +68,18 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    width: 100%;
+    transform: translateX(0);
+}
+
+.player-row.swiped {
+    transform: translateX(-80px);
 }
 
 .player-row td {
-    background: white;
     position: relative;
+    background: white;
+    z-index: 1;
 }
 
 .delete-action {
@@ -79,16 +87,11 @@
     right: -80px;
     top: 0;
     height: 100%;
+    width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: right 0.3s ease;
     background: white;
-    width: 80px;
-}
-
-.player-row.swiped .delete-action {
-    right: 0;
 }
 
 .delete-button {
@@ -96,12 +99,15 @@
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
     width: 70px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 .delete-button:hover {
