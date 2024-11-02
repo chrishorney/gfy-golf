@@ -1,7 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignupForm from './SignupForm';
 import WeeklyList from './WeeklyList';
+import YearlyStats from './YearlyStats';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignupForm />} />
         <Route path="/weekly" element={<WeeklyList />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/stats" element={<YearlyStats />} />
       </Routes>
     </Router>
   );
