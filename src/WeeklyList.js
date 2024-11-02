@@ -19,9 +19,11 @@ function WeeklyList() {
   const fetchWeeklyPlayers = async () => {
     try {
       setLoading(true);
+      // Add action parameter to the URL
       const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`);
       const data = await response.json();
-      setPlayers(data.players);
+      console.log('Fetched data:', data); // Add this for debugging
+      setPlayers(data.players || []); // Add fallback for empty data
       setError(null);
     } catch (err) {
       setError('Failed to load players');
@@ -63,8 +65,11 @@ function WeeklyList() {
     },
     onSwipedRight: () => setSwipedRowId(null),
     preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
+    trackMouse: true
   });
+
+  if (loading) return <div className="loading">Loading players...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="weekly-list-container">
