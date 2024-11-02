@@ -53,15 +53,14 @@ function WeeklyList() {
     navigate('/');
   };
 
-  // Move swipe handlers to top level
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: (eventData) => {
-      const rowIndex = parseInt(eventData.event.target.closest('tr').dataset.rowIndex);
-      console.log('Swiped left on row:', rowIndex);
-      setSwipedRowId(rowIndex);
+  // Individual swipe handlers for each row
+  const makeSwipeHandlers = (index) => useSwipeable({
+    onSwipedLeft: () => {
+      console.log('Swiped left on row:', index);
+      setSwipedRowId(index);
     },
     onSwipedRight: () => {
-      console.log('Swiped right, resetting');
+      console.log('Swiped right on row:', index);
       setSwipedRowId(null);
     },
     preventDefaultTouchmoveEvent: true,
@@ -95,26 +94,29 @@ function WeeklyList() {
               </tr>
             </thead>
             <tbody>
-              {players.map((player, index) => (
-                <tr 
-                  key={index}
-                  data-row-index={index}
-                  {...swipeHandlers}
-                  className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
-                >
-                  <td>{player.firstName}</td>
-                  <td>{player.lastName}</td>
-                  <td>{player.handicap}</td>
-                  <td className="delete-action">
-                    <button 
-                      onClick={() => handleDelete(player.rowIndex)}
-                      className="delete-button"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {players.map((player, index) => {
+                const rowSwipeHandlers = makeSwipeHandlers(index);
+                return (
+                  <tr 
+                    key={index}
+                    data-row-index={index}
+                    {...rowSwipeHandlers}
+                    className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
+                  >
+                    <td>{player.firstName}</td>
+                    <td>{player.lastName}</td>
+                    <td>{player.handicap}</td>
+                    <td className="delete-action">
+                      <button 
+                        onClick={() => handleDelete(player.rowIndex)}
+                        className="delete-button"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
