@@ -19,11 +19,9 @@ function WeeklyList() {
   const fetchWeeklyPlayers = async () => {
     try {
       setLoading(true);
-      // Add action parameter to the URL
       const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`);
       const data = await response.json();
-      console.log('Fetched data:', data); // Add this for debugging
-      setPlayers(data.players || []); // Add fallback for empty data
+      setPlayers(data.players || []);
       setError(null);
     } catch (err) {
       setError('Failed to load players');
@@ -55,18 +53,18 @@ function WeeklyList() {
     navigate('/');
   };
 
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: (eventData) => {
-      const row = eventData.event.target.closest('tr');
-      if (row) {
-        const rowId = parseInt(row.dataset.rowIndex);
-        setSwipedRowId(rowId);
-      }
+  const createSwipeHandler = (index) => ({
+    onSwipedLeft: () => {
+        console.log('Swiped left on row:', index);
+        setSwipedRowId(index);
     },
-    onSwipedRight: () => setSwipedRowId(null),
+    onSwipedRight: () => {
+        console.log('Swiped right on row:', index);
+        setSwipedRowId(null);
+    },
     preventDefaultTouchmoveEvent: true,
     trackMouse: true
-  });
+});
 
   if (loading) return <div className="loading">Loading players...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -95,26 +93,29 @@ function WeeklyList() {
               </tr>
             </thead>
             <tbody>
-              {players.map((player, index) => (
-                <tr 
-                  key={index}
-                  data-row-index={index}
-                  {...swipeHandlers}
-                  className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
-                >
-                  <td>{player.firstName}</td>
-                  <td>{player.lastName}</td>
-                  <td>{player.handicap}</td>
-                  <td className="delete-action">
-                    <button 
-                      onClick={() => handleDelete(player.rowIndex)}
-                      className="delete-button"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {players.map((player, index) => {
+                const swipeHandlers = useSwipeable(createSwipeHandler(index));
+                return (
+                  <tr 
+                    key={index}
+                    data-row-index={index}
+                    {...swipeHandlers}
+                    className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
+                  >
+                    <td>{player.firstName}</td>
+                    <td>{player.lastName}</td>
+                    <td>{player.handicap}</td>
+                    <td className="delete-action">
+                      <button 
+                        onClick={() => handleDelete(player.rowIndex)}
+                        className="delete-button"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
