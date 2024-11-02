@@ -35,7 +35,7 @@
 .players-list {
     background: white;
     border-radius: 8px;
-    overflow: hidden; /* This will hide the red buttons */
+    overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
     position: relative;
@@ -45,7 +45,7 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed; /* This ensures equal column widths */
+    table-layout: fixed;
 }
 
 .players-list th,
@@ -53,7 +53,7 @@
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
-    width: 33.33%; /* Divide space equally between the three columns */
+    width: 33.33%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -75,6 +75,7 @@
     -ms-user-select: none;
     width: 100%;
     transform: translateX(0);
+    overflow: visible;
 }
 
 .player-row.swiped {
@@ -97,12 +98,9 @@
     align-items: center;
     justify-content: center;
     background: white;
-    opacity: 0; /* Hide by default */
-    transition: opacity 0.3s ease;
-}
-
-.player-row.swiped .delete-action {
-    opacity: 1; /* Show when swiped */
+    transition: all 0.3s ease;
+    visibility: visible;
+    z-index: 2;
 }
 
 .delete-button {
@@ -119,6 +117,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
+    visibility: visible;
 }
 
 .delete-button:hover {
