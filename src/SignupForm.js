@@ -55,6 +55,10 @@ function SignupForm() {
     navigate('/weekly');
   };
 
+  const handleYearlyStats = () => {
+    navigate('/stats');
+  };
+
   return (
     <div className="signup-container">
       <form onSubmit={handleSubmit} className="signup-form">
@@ -113,6 +117,14 @@ function SignupForm() {
           onClick={handleViewList}
         >
           View Weekly List
+        </button>
+
+        <button 
+          type="button" 
+          className="yearly-stats-button"
+          onClick={handleYearlyStats}
+        >
+          Yearly Stats
         </button>
 
         {submitStatus === 'success' && (
