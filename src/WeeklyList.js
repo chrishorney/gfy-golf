@@ -10,7 +10,7 @@ function WeeklyList() {
   const [swipedRowId, setSwipedRowId] = useState(null);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyGjkuIFlUwwh2CJIthqgc4pt3ycxDocpQAaPol4Hgpwo02HFsv3rv3pNlzw_VdcDR/exec';
 
   useEffect(() => {
     fetchWeeklyPlayers();
@@ -46,6 +46,35 @@ function WeeklyList() {
         console.error('Error deleting player:', error);
         alert('Failed to delete player. Please try again.');
       }
+    }
+  };
+
+  const handleTeamChange = async (rowIndex, teamNumber) => {
+    try {
+      const response = await fetch(`${SCRIPT_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'updateTeam',
+          rowIndex: rowIndex,
+          team: teamNumber
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update team number');
+      }
+
+      // Update local state
+      setPlayers(players.map(player => 
+        player.rowIndex === rowIndex 
+          ? { ...player, team: teamNumber }
+          : player
+      ));
+    } catch (error) {
+      console.error('Error updating team number:', error);
     }
   };
 
@@ -95,6 +124,7 @@ function WeeklyList() {
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Handicap</th>
+                <th>Team</th>
               </tr>
             </thead>
             <tbody {...swipeHandlers}>
@@ -107,6 +137,16 @@ function WeeklyList() {
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      max="99"
+                      value={player.team || ''}
+                      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+                      className="team-input"
+                    />
+                  </td>
                   <td className="delete-action">
                     <button 
                       onClick={() => handleDelete(player.rowIndex)}
