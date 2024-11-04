@@ -107,8 +107,9 @@ function WeeklyList() {
       setSwipedRowId(null);
     },
     preventDefaultTouchmoveEvent: true,
-    trackMouse: true
-    delta:10
+    trackMouse: true,
+    delta: 10,
+    swipeDuration: 250
   });
 
   if (loading) return <div className="loading">Loading players...</div>;
