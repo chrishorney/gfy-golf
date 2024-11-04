@@ -10,7 +10,7 @@ function WeeklyList() {
   const [swipedRowId, setSwipedRowId] = useState(null);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVcqK0UMRh53gQHjTYwpW0V2N69J-aTOl-Hc-aZxhshKQxiqxk5Vfa3Z4YJDXsBiBR/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
