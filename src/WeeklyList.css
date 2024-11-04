@@ -78,7 +78,7 @@
 }
 
 .player-row.swiped {
-    transform: translateX(-200px);
+    transform: translateX(-100px);
 }
 
 .player-row td {
@@ -102,7 +102,7 @@
     right: -200px;
     top: 0;
     height: 100%;
-    width: 200px;
+    width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -118,8 +118,8 @@
     padding: 0.5rem;
     cursor: pointer;
     font-size: 0.9rem;
-    width: 180px;
-    height: 44px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
