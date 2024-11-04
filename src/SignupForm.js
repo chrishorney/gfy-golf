@@ -11,7 +11,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVcqK0UMRh53gQHjTYwpW0V2N69J-aTOl-Hc-aZxhshKQxiqxk5Vfa3Z4YJDXsBiBR/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIXhiCkl65f8QABCZlpHd_npczLStihpBm_2Vhky_D6YKaog-VY700I21_2Iz4j2nb/exec';
 
   const handleChange = (e) => {
     const { name, value } = e.target;

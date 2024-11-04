@@ -10,7 +10,7 @@ function WeeklyList() {
   const [swipedRowId, setSwipedRowId] = useState(null);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVcqK0UMRh53gQHjTYwpW0V2N69J-aTOl-Hc-aZxhshKQxiqxk5Vfa3Z4YJDXsBiBR/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxIXhiCkl65f8QABCZlpHd_npczLStihpBm_2Vhky_D6YKaog-VY700I21_2Iz4j2nb/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -36,28 +36,15 @@ function WeeklyList() {
 
   const handleTeamChange = async (rowIndex, teamNumber) => {
     try {
-      console.log('Attempting to update team:', { rowIndex, teamNumber }); // Debug log
+      console.log('Attempting to update team:', { rowIndex, teamNumber });
   
-      const response = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'updateTeam',
-          rowIndex: rowIndex,
-          team: teamNumber
-        })
+      const response = await fetch(`${SCRIPT_URL}?action=updateTeam&row=${rowIndex}&team=${teamNumber}`, {
+        method: 'GET', // Changed to GET to avoid CORS
+        mode: 'no-cors', // Added no-cors mode
       });
   
-      const data = await response.json(); // Try to get response data
-      console.log('Server response:', data); // Debug log
-  
-      if (!response.ok) {
-        throw new Error(`Failed to update team number: ${data.message || response.statusText}`);
-      }
-  
-      // Update local state
+      // Since we're using no-cors, we can't read the response
+      // Instead, we'll update the UI optimistically
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
@@ -65,9 +52,15 @@ function WeeklyList() {
             : player
         )
       );
+  
+      // Refresh the list after a short delay to ensure sync with server
+      setTimeout(() => {
+        fetchWeeklyPlayers();
+      }, 1000);
+  
     } catch (error) {
       console.error('Error updating team number:', error);
-      alert('Failed to update team. Please try again. Error: ' + error.message);
+      alert('Failed to update team. Please try again.');
     }
   };
 
