@@ -136,25 +136,29 @@ function WeeklyList() {
         ) : (
           // In the return statement, update the table structure:
 <table>
-  <thead>
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Handicap</th>
-      <th>Team</th>
-    </tr>
-  </thead>
+<thead>
+  <tr>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Handicap</th>
+    <th>Guest Of</th>
+    <th>Team</th>
+  </tr>
+</thead>
   <tbody {...swipeHandlers}>
     {groupPlayersByTeam(players).map((player, index) => (
       <tr 
       key={index}
       data-row-index={player.rowIndex}
-      className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''}`}
+      className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
+        player.isGuest ? 'guest-row' : ''
+      }`}
       {...swipeHandlers}
     >
       <td>{player.firstName}</td>
       <td>{player.lastName}</td>
       <td>{player.handicap}</td>
+      <td>{player.invitedBy || '-'}</td>
       <td className="team-cell">
         <select
           value={player.team || ''}

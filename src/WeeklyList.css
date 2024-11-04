@@ -224,3 +224,12 @@
     color: #666;
     font-weight: normal;
   }
+
+  .guest-row {
+    background-color: #f8f9fa;
+    border-left: 3px solid #2196F3;
+  }
+  
+  .guest-row td {
+    background-color: #f8f9fa;
+  }
