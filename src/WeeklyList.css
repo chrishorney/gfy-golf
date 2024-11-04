@@ -107,7 +107,7 @@
     align-items: center;
     justify-content: center;
     background: white;
-    z-index: 10;
+    z-index: 2;
 }
 
 .delete-button {
@@ -124,7 +124,7 @@
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
-    z-index: 11;
+    z-index: 3;
 }
 
 .delete-button:hover {
@@ -135,6 +135,7 @@
 .team-cell {
     padding: 0.75rem !important;
     background: white;
+    z-index: 1;
 }
 
 .team-select-full {
@@ -145,6 +146,8 @@
     font-size: 0.9rem;
     background-color: white;
     cursor: pointer;
+    position: relative;
+    z-index: 1;
 }
 
 .team-select-full:focus {
