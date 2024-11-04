@@ -53,12 +53,32 @@
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
-    width: 25%;
 }
 
 .players-list th {
     background-color: #f5f5f5;
     font-weight: 600;
+}
+
+/* Specific column widths */
+.players-list th:nth-child(1),
+.players-list td:nth-child(1) {
+    width: 25%;
+}
+
+.players-list th:nth-child(2),
+.players-list td:nth-child(2) {
+    width: 25%;
+}
+
+.players-list th:nth-child(3),
+.players-list td:nth-child(3) {
+    width: 25%;
+}
+
+.players-list th:nth-child(4),
+.players-list td:nth-child(4) {
+    width: 25%;
 }
 
 .player-row {
@@ -96,15 +116,15 @@
     top: 0;
     height: 100%;
     width: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background-color: #dc3545;
     z-index: 2;
+    display: none;
 }
 
 .player-row.swiped .delete-action {
     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .delete-button {
