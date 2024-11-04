@@ -36,6 +36,7 @@ function WeeklyList() {
 
   const handleTeamChange = async (rowIndex, teamNumber) => {
     try {
+      console.log('Updating team:', rowIndex, teamNumber); // Debug log
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: {
@@ -47,19 +48,22 @@ function WeeklyList() {
           team: teamNumber
         })
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update team number');
       }
-
+  
       // Update local state
-      setPlayers(players.map(player => 
-        player.rowIndex === rowIndex 
-          ? { ...player, team: teamNumber }
-          : player
-      ));
+      setPlayers(prevPlayers => 
+        prevPlayers.map(player => 
+          player.rowIndex === rowIndex 
+            ? { ...player, team: teamNumber }
+            : player
+        )
+      );
     } catch (error) {
       console.error('Error updating team number:', error);
+      alert('Failed to update team. Please try again.');
     }
   };
 
