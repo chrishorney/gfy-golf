@@ -140,38 +140,38 @@ function WeeklyList() {
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
                   <td className="team-cell">
-                    {player.team ? (
-                      <div className="team-display">
-                        <span className="team-label">Team {player.team}</span>
-                        <select
-                          value={player.team}
-                          onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                          className="team-select-compact"
-                        >
-                          <option value="">Change</option>
-                          {teamNumbers.map(num => (
-                            <option key={num} value={num}>
-                              {num}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    ) : (
-                      <select
-                        value=""
-                        onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                        className="team-select-full"
-                      >
-                        <option value="">Select Team</option>
-                        {teamNumbers.map(num => (
-                          <option key={num} value={num}>
-                            Team {num}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </td>
-                  <td className="delete-action">
+  {player.team ? (
+    <div className="team-display">
+      <span className="team-label">Team {player.team}</span>
+      <select
+        value={player.team}
+        onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+        className="team-select-compact"
+      >
+        <option value="">Change</option>
+        {teamNumbers.map(num => (
+          <option key={num} value={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+    </div>
+  ) : (
+    <select
+      value=""
+      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+      className="team-select-full"
+    >
+      <option value="">Select Team</option>
+      {teamNumbers.map(num => (
+        <option key={num} value={num}>
+          Team {num}
+        </option>
+      ))}
+    </select>
+  )}
+</td>
+                        <td className="delete-action">
                     <button 
                       onClick={() => handleDelete(player.rowIndex)}
                       className="delete-button"
