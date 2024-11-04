@@ -109,7 +109,8 @@ function WeeklyList() {
     preventDefaultTouchmoveEvent: true,
     trackMouse: true,
     delta: 10,
-    swipeDuration: 250
+    swipeDuration: 500,
+    touchEventOptions: { passive: false }
   });
 
   if (loading) return <div className="loading">Loading players...</div>;
@@ -151,6 +152,7 @@ function WeeklyList() {
             ? 'team-separator' 
             : ''
         }`}
+        {...swipeHandlers}
       >
         <td>{player.firstName}</td>
         <td>{player.lastName}</td>
