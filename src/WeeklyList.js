@@ -139,7 +139,7 @@ function WeeklyList() {
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
-                  <td>
+                  <td className="team-cell">
                     <select
                       value={player.team || ''}
                       onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
@@ -152,6 +152,11 @@ function WeeklyList() {
                         </option>
                       ))}
                     </select>
+                    {player.team && (
+                      <span className="team-label">
+                        Team {player.team}
+                      </span>
+                    )}
                   </td>
                   <td className="delete-action">
                     <button 
