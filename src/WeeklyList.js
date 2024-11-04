@@ -10,7 +10,7 @@ function WeeklyList() {
   const [swipedRowId, setSwipedRowId] = useState(null);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyGjkuIFlUwwh2CJIthqgc4pt3ycxDocpQAaPol4Hgpwo02HFsv3rv3pNlzw_VdcDR/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
   useEffect(() => {
     fetchWeeklyPlayers();
@@ -31,27 +31,9 @@ function WeeklyList() {
     }
   };
 
-  const handleDelete = async (rowIndex) => {
-    if (window.confirm('Are you sure you want to delete this player?')) {
-      try {
-        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-
-        setSwipedRowId(null);
-        await fetchWeeklyPlayers();
-
-      } catch (error) {
-        console.error('Error deleting player:', error);
-        alert('Failed to delete player. Please try again.');
-      }
-    }
-  };
-
   const handleTeamChange = async (rowIndex, teamNumber) => {
     try {
-      const response = await fetch(`${SCRIPT_URL}`, {
+      const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,11 +60,28 @@ function WeeklyList() {
     }
   };
 
+  const handleDelete = async (rowIndex) => {
+    if (window.confirm('Are you sure you want to delete this player?')) {
+      try {
+        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+
+        setSwipedRowId(null);
+        await fetchWeeklyPlayers();
+
+      } catch (error) {
+        console.error('Error deleting player:', error);
+        alert('Failed to delete player. Please try again.');
+      }
+    }
+  };
+
   const handleBackToSignup = () => {
     navigate('/');
   };
 
-  // Single swipe handler at component level
   const swipeHandlers = useSwipeable({
     onSwipedLeft: (eventData) => {
       const row = eventData.event.target.closest('tr');
@@ -145,6 +144,7 @@ function WeeklyList() {
                       value={player.team || ''}
                       onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
                       className="team-input"
+                      placeholder="#"
                     />
                   </td>
                   <td className="delete-action">
