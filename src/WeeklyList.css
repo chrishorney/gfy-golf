@@ -90,6 +90,7 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    cursor: grab;
 }
 
 .player-row.swiped {
@@ -118,7 +119,9 @@
     width: 100px;
     background-color: #dc3545;
     z-index: 2;
-    display: none;
+    display: flex; /* Changed from 'none' to 'flex' */
+    align-items: center;
+    justify-content: center;
 }
 
 .player-row.swiped .delete-action {
@@ -135,10 +138,10 @@
     background: none;
     cursor: pointer;
     font-size: 0.9rem;
-    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3; /* Added z-index */
 }
 
 .delete-button:hover {
