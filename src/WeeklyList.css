@@ -53,7 +53,7 @@
     padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
-    width: 25%; /* Changed from 33.33% to accommodate new column */
+    width: 25%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -127,20 +127,25 @@
     background-color: #c82333;
 }
 
-/* New styles for team input */
-.team-input {
-    width: 60px;
+/* Team select dropdown styles */
+.team-select {
+    width: 120px;
     padding: 4px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    text-align: center;
     font-size: 0.9rem;
+    background-color: white;
+    cursor: pointer;
 }
 
-.team-input:focus {
+.team-select:focus {
     outline: none;
     border-color: #2196F3;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.team-select option {
+    padding: 4px;
 }
 
 @media (max-width: 600px) {

@@ -12,6 +12,9 @@ function WeeklyList() {
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7zpTM85fM2fXyu6MF-0XsRJ1-DJzRFlc2vxGopHlAovcRVi1xaVGCVeaZLlob0GWG/exec';
 
+  // Create array of team numbers 1-10
+  const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
+
   useEffect(() => {
     fetchWeeklyPlayers();
   }, []);
@@ -137,15 +140,18 @@ function WeeklyList() {
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
                   <td>
-                    <input
-                      type="number"
-                      min="1"
-                      max="99"
+                    <select
                       value={player.team || ''}
                       onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                      className="team-input"
-                      placeholder="#"
-                    />
+                      className="team-select"
+                    >
+                      <option value="">Select Team</option>
+                      {teamNumbers.map(num => (
+                        <option key={num} value={num}>
+                          Team {num}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td className="delete-action">
                     <button 
