@@ -119,7 +119,10 @@ function WeeklyList() {
   return (
     <div className="weekly-list-container">
       <div className="header-section">
-        <h2>This Week's Players</h2>
+        <div className="title-count">
+          <h2>This Week's Players</h2>
+          <span className="player-count">({players.length})</span>
+        </div>
         <button 
           onClick={handleBackToSignup}
           className="back-button"

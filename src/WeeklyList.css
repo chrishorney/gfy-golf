@@ -212,3 +212,15 @@
         font-size: 0.85rem;
     }
 }
+
+.title-count {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .player-count {
+    font-size: 1.2rem;
+    color: #666;
+    font-weight: normal;
+  }
