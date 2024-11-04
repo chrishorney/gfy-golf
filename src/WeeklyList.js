@@ -108,6 +108,7 @@ function WeeklyList() {
     },
     preventDefaultTouchmoveEvent: true,
     trackMouse: true
+    delta:10
   });
 
   if (loading) return <div className="loading">Loading players...</div>;
@@ -166,14 +167,14 @@ function WeeklyList() {
                       ))}
                     </select>
                   </td>
-                  <td className="delete-action">
-                    <button 
-                      onClick={() => handleDelete(player.rowIndex)}
-                      className="delete-button"
-                    >
-                      Delete
-                    </button>
-                  </td>
+                  <div className="delete-action">
+      <button 
+        onClick={() => handleDelete(player.rowIndex)}
+        className="delete-button"
+      >
+        Delete
+      </button>
+    </div>
                 </tr>
               ))}
             </tbody>
