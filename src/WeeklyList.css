@@ -121,7 +121,7 @@
     background-color: #c82333;
 }
 
-/* Updated team selection styles */
+/* Simplified team selection styles */
 .team-cell {
     padding: 0.75rem !important;
     background: white;
@@ -137,43 +137,13 @@
     cursor: pointer;
 }
 
-.team-select-compact {
-    width: 80px;
-    padding: 4px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    background-color: white;
-    cursor: pointer;
-    margin-left: 8px;
-}
-
-.team-display {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.team-label {
-    display: inline-block;
-    padding: 6px 12px;
-    background-color: #e3f2fd;
-    color: #1976D2;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.team-select-full:focus,
-.team-select-compact:focus {
+.team-select-full:focus {
     outline: none;
     border-color: #2196F3;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
 }
 
-.team-select-full option,
-.team-select-compact option {
+.team-select-full option {
     padding: 4px;
 }
 
@@ -198,17 +168,6 @@
 
     .team-select-full {
         padding: 6px;
-        font-size: 0.85rem;
-    }
-    
-    .team-select-compact {
-        width: 70px;
-        padding: 4px;
-        font-size: 0.85rem;
-    }
-    
-    .team-label {
-        padding: 4px 8px;
         font-size: 0.85rem;
     }
 }
