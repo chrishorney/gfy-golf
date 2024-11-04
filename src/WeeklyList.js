@@ -139,7 +139,7 @@ function WeeklyList() {
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
-                  // In WeeklyList.js, update the team cell:
+                  
 <td className="team-cell">
   <div className="team-content">
     <select

@@ -131,11 +131,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 0.75rem !important;
+    background: white;
 }
-/* Team select dropdown styles */
+
 .team-select {
-    width: 120px;
-    padding: 4px 8px;
+    min-width: 120px;
+    padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -143,6 +145,16 @@
     cursor: pointer;
 }
 
+.team-label {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #e3f2fd;
+    color: #1976D2;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
 .team-select:focus {
     outline: none;
     border-color: #2196F3;
@@ -151,17 +163,6 @@
 
 .team-select option {
     padding: 4px;
-}
-
-.team-label {
-    display: inline-block;
-    padding: 4px 8px;
-    background-color: #e3f2fd;
-    color: #1976D2;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    white-space: nowrap;
 }
 
 @media (max-width: 600px) {
