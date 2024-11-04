@@ -19,6 +19,16 @@ function WeeklyList() {
     fetchWeeklyPlayers();
   }, []);
 
+  // Add the grouping function
+  const groupPlayersByTeam = (players) => {
+    return [...players].sort((a, b) => {
+      if (!a.team && !b.team) return 0;
+      if (!a.team) return -1;
+      if (!b.team) return 1;
+      return parseInt(a.team) - parseInt(b.team);
+    });
+  };
+
   const fetchWeeklyPlayers = async () => {
     try {
       setLoading(true);
@@ -39,12 +49,10 @@ function WeeklyList() {
       console.log('Attempting to update team:', { rowIndex, teamNumber });
   
       const response = await fetch(`${SCRIPT_URL}?action=updateTeam&row=${rowIndex}&team=${teamNumber}`, {
-        method: 'GET', // Changed to GET to avoid CORS
-        mode: 'no-cors', // Added no-cors mode
+        method: 'GET',
+        mode: 'no-cors',
       });
   
-      // Since we're using no-cors, we can't read the response
-      // Instead, we'll update the UI optimistically
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
@@ -53,7 +61,6 @@ function WeeklyList() {
         )
       );
   
-      // Refresh the list after a short delay to ensure sync with server
       setTimeout(() => {
         fetchWeeklyPlayers();
       }, 1000);
@@ -131,30 +138,35 @@ function WeeklyList() {
               </tr>
             </thead>
             <tbody {...swipeHandlers}>
-              {players.map((player, index) => (
+              {groupPlayersByTeam(players).map((player, index) => (
                 <tr 
                   key={index}
                   data-row-index={index}
-                  className={`player-row ${swipedRowId === index ? 'swiped' : ''}`}
+                  className={`player-row ${swipedRowId === index ? 'swiped' : ''} ${
+                    index > 0 && 
+                    player.team !== groupPlayersByTeam(players)[index - 1].team 
+                      ? 'team-separator' 
+                      : ''
+                  }`}
                 >
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
                   <td className="team-cell">
-  <select
-    value={player.team || ''}
-    onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-    className="team-select-full"
-  >
-    <option value="">Select Team</option>
-    {teamNumbers.map(num => (
-      <option key={num} value={num}>
-        Team {num}
-      </option>
-    ))}
-  </select>
-</td>
-                        <td className="delete-action">
+                    <select
+                      value={player.team || ''}
+                      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+                      className="team-select-full"
+                    >
+                      <option value="">Select Team</option>
+                      {teamNumbers.map(num => (
+                        <option key={num} value={num}>
+                          Team {num}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="delete-action">
                     <button 
                       onClick={() => handleDelete(player.rowIndex)}
                       className="delete-button"

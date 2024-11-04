@@ -85,6 +85,16 @@
     position: relative;
     background: white;
     z-index: 1;
+    padding: 0.75rem;
+}
+
+/* New team separator styles */
+.team-separator {
+    border-top: 2px solid #e0e0e0;
+}
+
+.player-row:nth-of-type(even) {
+    background-color: #f8f9fa;
 }
 
 .delete-action {
