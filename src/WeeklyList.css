@@ -98,12 +98,6 @@
     justify-content: center;
     background: white;
     z-index: 10;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-}
-
-.player-row.swiped .delete-action {
-    transform: translateX(0);
 }
 
 .delete-button {
@@ -127,22 +121,37 @@
     background-color: #c82333;
 }
 
+/* Updated team selection styles */
 .team-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     padding: 0.75rem !important;
     background: white;
 }
 
-.team-select {
-    min-width: 120px;
+.team-select-full {
+    width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 0.9rem;
     background-color: white;
     cursor: pointer;
+}
+
+.team-select-compact {
+    width: 80px;
+    padding: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.team-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .team-label {
@@ -155,13 +164,16 @@
     font-weight: 500;
     white-space: nowrap;
 }
-.team-select:focus {
+
+.team-select-full:focus,
+.team-select-compact:focus {
     outline: none;
     border-color: #2196F3;
     box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
 }
 
-.team-select option {
+.team-select-full option,
+.team-select-compact option {
     padding: 4px;
 }
 
@@ -182,5 +194,21 @@
 
     .back-button {
         padding: 0.5rem 1rem;
+    }
+
+    .team-select-full {
+        padding: 6px;
+        font-size: 0.85rem;
+    }
+    
+    .team-select-compact {
+        width: 70px;
+        padding: 4px;
+        font-size: 0.85rem;
+    }
+    
+    .team-label {
+        padding: 4px 8px;
+        font-size: 0.85rem;
     }
 }
