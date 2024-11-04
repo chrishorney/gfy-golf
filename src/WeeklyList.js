@@ -139,44 +139,44 @@ function WeeklyList() {
               </tr>
             </thead>
             <tbody {...swipeHandlers}>
-              {groupPlayersByTeam(players).map((player, index) => (
-                <tr 
-                  key={index}
-                  data-row-index={index}
-                  className={`player-row ${swipedRowId === index ? 'swiped' : ''} ${
-                    index > 0 && 
-                    player.team !== groupPlayersByTeam(players)[index - 1].team 
-                      ? 'team-separator' 
-                      : ''
-                  }`}
-                >
-                  <td>{player.firstName}</td>
-                  <td>{player.lastName}</td>
-                  <td>{player.handicap}</td>
-                  <td className="team-cell">
-                    <select
-                      value={player.team || ''}
-                      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                      className="team-select-full"
-                    >
-                      <option value="">Select Team</option>
-                      {teamNumbers.map(num => (
-                        <option key={num} value={num}>
-                          Team {num}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <div className="delete-action">
+            {groupPlayersByTeam(players).map((player, index) => (
+  <tr 
+    key={index}
+    data-row-index={index}
+    className={`player-row ${swipedRowId === index ? 'swiped' : ''} ${
+      index > 0 && 
+      player.team !== groupPlayersByTeam(players)[index - 1].team 
+        ? 'team-separator' 
+        : ''
+    }`}
+  >
+    <td>{player.firstName}</td>
+    <td>{player.lastName}</td>
+    <td>{player.handicap}</td>
+    <td className="team-cell">
+      <select
+        value={player.team || ''}
+        onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+        className="team-select-full"
+      >
+        <option value="">Select Team</option>
+        {teamNumbers.map(num => (
+          <option key={num} value={num}>
+            Team {num}
+          </option>
+        ))}
+      </select>
+    </td>
+    <td className="delete-action">
       <button 
         onClick={() => handleDelete(player.rowIndex)}
         className="delete-button"
       >
         Delete
       </button>
-    </div>
-                </tr>
-              ))}
+    </td>
+  </tr>
+))}
             </tbody>
           </table>
         )}
