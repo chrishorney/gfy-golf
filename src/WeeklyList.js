@@ -139,25 +139,28 @@ function WeeklyList() {
                   <td>{player.firstName}</td>
                   <td>{player.lastName}</td>
                   <td>{player.handicap}</td>
-                  <td className="team-cell">
-                    <select
-                      value={player.team || ''}
-                      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                      className="team-select"
-                    >
-                      <option value="">Select Team</option>
-                      {teamNumbers.map(num => (
-                        <option key={num} value={num}>
-                          Team {num}
-                        </option>
-                      ))}
-                    </select>
-                    {player.team && (
-                      <span className="team-label">
-                        Team {player.team}
-                      </span>
-                    )}
-                  </td>
+                  // In WeeklyList.js, update the team cell:
+<td className="team-cell">
+  <div className="team-content">
+    <select
+      value={player.team || ''}
+      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+      className="team-select"
+    >
+      <option value="">Select Team</option>
+      {teamNumbers.map(num => (
+        <option key={num} value={num}>
+          Team {num}
+        </option>
+      ))}
+    </select>
+    {player.team && (
+      <span className="team-label">
+        Team {player.team}
+      </span>
+    )}
+  </div>
+</td>
                   <td className="delete-action">
                     <button 
                       onClick={() => handleDelete(player.rowIndex)}
