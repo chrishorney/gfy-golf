@@ -89,6 +89,33 @@ function WeeklyList() {
     }
   };
 
+  const handleGuestChange = async (rowIndex, invitedBy) => {
+    try {
+      console.log('Updating guest status:', { rowIndex, invitedBy });
+
+      const response = await fetch(`${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`, {
+        method: 'GET',
+        mode: 'no-cors',
+      });
+
+      setPlayers(prevPlayers => 
+        prevPlayers.map(player => 
+          player.rowIndex === rowIndex 
+            ? { ...player, invitedBy: invitedBy }
+            : player
+        )
+      );
+
+      setTimeout(() => {
+        fetchWeeklyPlayers();
+      }, 1000);
+
+    } catch (error) {
+      console.error('Error updating guest status:', error);
+      alert('Failed to update guest status. Please try again.');
+    }
+  };
+
   const handleBackToSignup = () => {
     navigate('/');
   };
