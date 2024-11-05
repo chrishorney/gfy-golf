@@ -108,7 +108,7 @@ function SignupForm() {
           className="submit-button"
           disabled={submitStatus === 'submitting'}
         >
-          {submitStatus === 'submitting' ? 'Submitting...' : 'Sign Up'}
+          {submitStatus === 'submitting' ? 'Submitting...' : "I'm in!"}
         </button>
 
         <button 
