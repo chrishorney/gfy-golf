@@ -72,7 +72,7 @@ function WeeklyList() {
   };
 
   const handleDelete = async (rowIndex) => {
-    if (window.confirm('Are you sure you want to delete this player?')) {
+    if (window.confirm('Bitching out?')) {
       try {
         await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
           method: 'GET',
