@@ -100,7 +100,7 @@
 }
 
 .player-row.swiped {
-    transform: translateX(-100px);
+    transform: translateX(-60px);
 }
 
 .player-row td {
@@ -119,10 +119,10 @@
 
 .delete-action {
     position: absolute;
-    right: -100px;
+    right: -60px;
     top: 0;
     height: 100%;
-    width: 100px;
+    width: 60px;
     background-color: #dc3545;
     z-index: 2;
     display: flex; /* Changed from 'none' to 'flex' */
