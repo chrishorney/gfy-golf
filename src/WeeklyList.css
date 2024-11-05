@@ -14,7 +14,7 @@
 
 .header-section h2 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .back-button {
@@ -162,10 +162,10 @@
 
 .team-select-full {
     width: 100%;
-    padding: 8px;
+    padding: 4px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     background-color: white;
     cursor: pointer;
     position: relative;
@@ -194,7 +194,7 @@
     color: #dc3545;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .weekly-list-container {
         padding: 0.5rem;
         margin: 1rem auto;
@@ -204,9 +204,13 @@
         padding: 0 0.5rem;
     }
 
-    .players-list th,
+    .players-list th {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
     .players-list td {
-        padding: 0.75rem;
+        font-size: 0.9rem;
+        padding: 0.5rem;
     }
 
     .back-button {
@@ -226,7 +230,7 @@
   }
   
   .player-count {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #666;
     font-weight: normal;
   }
