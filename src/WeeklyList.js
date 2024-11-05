@@ -146,17 +146,16 @@ function WeeklyList() {
   return (
     <div className="weekly-list-container">
       <div className="header-section">
-        <div className="title-count">
-          <h2>This Week's Players</h2>
-          <span className="player-count">({players.length})</span>
-        </div>
-        <button 
-          onClick={handleBackToSignup}
-          className="back-button"
-        >
-          Back to Signup
-        </button>
-      </div>
+  <div className="title-count">
+    <h2>This Week's Players ({players.length})</h2>
+  </div>
+  <button 
+    onClick={handleBackToSignup}
+    className="back-button"
+  >
+    Back to Signup
+  </button>
+</div>
       <div className="players-list">
         {players.length === 0 ? (
           <p>No players signed up yet this week</p>

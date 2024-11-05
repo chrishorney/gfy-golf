@@ -226,7 +226,6 @@
 .title-count {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
   }
   
   .player-count {
