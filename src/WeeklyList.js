@@ -167,7 +167,7 @@ function WeeklyList() {
     <tr>
       <th>First Name</th>
       <th>Last Name</th>
-      <th>Handicap</th>
+      <th>Hcp</th>
       <th>Guest Of</th>
       <th>Team</th>
     </tr>
