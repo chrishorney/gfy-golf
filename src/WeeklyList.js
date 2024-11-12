@@ -34,6 +34,7 @@ function WeeklyList() {
       setLoading(true);
       const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`);
       const data = await response.json();
+      console.log('Fetched players:', data.players);
       setPlayers(data.players || []);
       setError(null);
     } catch (err) {
@@ -74,13 +75,16 @@ function WeeklyList() {
   const handleDelete = async (rowIndex) => {
     if (window.confirm('Bitching out?')) {
       try {
-        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+        console.log('Attempting to delete row:', rowIndex);
+        const response = await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
           method: 'GET',
           mode: 'no-cors'
         });
 
-        setSwipedRowId(null);
-        await fetchWeeklyPlayers();
+        setTimeout(async () => {
+          await fetchWeeklyPlayers();
+          setSwipedRowId(null);
+        }, 1000);
 
       } catch (error) {
         console.error('Error deleting player:', error);
