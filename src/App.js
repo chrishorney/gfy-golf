@@ -6,14 +6,14 @@ import SignupForm from './SignupForm';
 import WeeklyList from './WeeklyList';
 import YearlyStats from './YearlyStats';
 
-// Your web app's Firebase configuration
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-auth-domain",
-  projectId: "your-project-id",
-  storageBucket: "your-storage-bucket",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyCSYN4H4HWlLtb490kwN1xOO1kHJ9HEfAA",
+  authDomain: "gfy-golf-223c9.firebaseapp.com",
+  projectId: "gfy-golf-223c9",
+  storageBucket: "gfy-golf-223c9.firebasestorage.app",
+  messagingSenderId: "370898390679",
+  appId: "1:370898390679:web:bf518b583384e5c46023d2"
 };
 
 // Initialize Firebase
@@ -21,19 +21,27 @@ const app = initializeApp(firebaseConfig);
 
 function App() {
   useEffect(() => {
-    const getMessage = async () => {
+    const initializeMessaging = async () => {
       try {
+        console.log('Initializing messaging...');
         const messaging = getMessaging(app);
-        const token = await getToken(messaging, {
-          vapidKey: 'your-vapid-key'
-        });
-        console.log('Your FCM Token:', token);
+        console.log('Requesting permission...');
+        
+        const permission = await Notification.requestPermission();
+        console.log('Permission:', permission);
+        
+        if (permission === 'granted') {
+          const token = await getToken(messaging, {
+            vapidKey: 'BPQEZxGlQ9S4JaeZn_KLGQPzxT4hKr6_h0lmvBYxPMalWxdtaMoaaxWmyXHrXdxFG7FmR9oOd_7wRkF2O1THkQY'
+          });
+          console.log('FCM Token:', token);
+        }
       } catch (error) {
-        console.error('Error getting token:', error);
+        console.error('Error initializing messaging:', error);
       }
     };
-    
-    getMessage();
+
+    initializeMessaging();
   }, []);
 
   return (

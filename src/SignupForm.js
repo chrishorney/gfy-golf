@@ -60,7 +60,33 @@ function SignupForm() {
         url.searchParams.append(key, formData[key]);
       });
 
+      // First, get the current signup count
+      const countUrl = new URL(SCRIPT_URL);
+      countUrl.searchParams.append('action', 'getPlayerCount');
+      const countResponse = await fetch(countUrl);
+      const playerCount = await countResponse.json();
+
+      // Submit the form
       await fetch(url, {
+        method: 'POST',
+        mode: 'no-cors'
+      });
+
+      // Send notification with player count
+      const date = new Date();
+      const formattedDate = date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      // Send notification to your Firebase function
+      const notificationUrl = new URL(SCRIPT_URL);
+      notificationUrl.searchParams.append('action', 'sendNotification');
+      notificationUrl.searchParams.append('title', `GFY Golf Update - ${formattedDate}`);
+      notificationUrl.searchParams.append('body', `${playerCount + 1} ${playerCount + 1 === 1 ? 'player has' : 'players have'} signed up for golf!`);
+      
+      await fetch(notificationUrl, {
         method: 'POST',
         mode: 'no-cors'
       });
@@ -92,14 +118,6 @@ function SignupForm() {
       <div className="signup-container">
         <form onSubmit={handleSubmit} className="signup-form">
           <h2>Golf Group Signup</h2>
-          
-          <button 
-            type="button"
-            className="notification-button"
-            onClick={handleNotificationPermission}
-          >
-            Enable Notifications
-          </button>
           
           <div className="form-group">
             <label htmlFor="firstName">First Name</label>
@@ -162,6 +180,14 @@ function SignupForm() {
             onClick={handleYearlyStats}
           >
             Yearly Stats
+          </button>
+
+          <button 
+            type="button"
+            className="notification-button"
+            onClick={handleNotificationPermission}
+          >
+            Enable Notifications
           </button>
 
           {submitStatus === 'success' && (
