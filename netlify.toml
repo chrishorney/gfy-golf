@@ -1,8 +1,13 @@
+[build]
+  command = "CI=false npm run build"
+  publish = "build"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[build]
-  command = "CI= npm run build"
-  publish = "build"
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
