@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignupForm.css';
+import WeatherWidget from './components/WeatherWidget';
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -61,6 +62,7 @@ function SignupForm() {
 
   return (
     <div className="signup-container">
+      <WeatherWidget />
       <form onSubmit={handleSubmit} className="signup-form">
         <h2>Golf Group Signup</h2>
         

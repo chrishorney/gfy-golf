@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import './WeeklyList.css';
+import WeatherWidget from './components/WeatherWidget';
 
 function WeeklyList() {
   const [players, setPlayers] = useState([]);
@@ -149,87 +150,87 @@ function WeeklyList() {
 
   return (
     <div className="weekly-list-container">
+      <WeatherWidget />
       <div className="header-section">
-  <div className="title-count">
-    <h2>This Week's Players ({players.length})</h2>
-  </div>
-  <button 
-    onClick={handleBackToSignup}
-    className="back-button"
-  >
-    Back to Signup
-  </button>
-</div>
+        <div className="title-count">
+          <h2>This Week's Players ({players.length})</h2>
+        </div>
+        <button 
+          onClick={handleBackToSignup}
+          className="back-button"
+        >
+          Back to Signup
+        </button>
+      </div>
       <div className="players-list">
         {players.length === 0 ? (
           <p>No players signed up yet this week</p>
         ) : (
-          // In the return statement, update the table structure:
-<table>
-  <thead>
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Hcp</th>
-      <th>Guest Of</th>
-      <th>Team</th>
-    </tr>
-  </thead>
-  <tbody {...swipeHandlers}>
-    {groupPlayersByTeam(players).map((player, index) => (
-      <tr 
-        key={index}
-        data-row-index={player.rowIndex}
-        className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
-          player.invitedBy ? 'guest-row' : ''
-        }`}
-        {...swipeHandlers}
-      >
-        <td>{player.firstName}</td>
-        <td>{player.lastName}</td>
-        <td>{player.handicap}</td>
-        <td className="guest-cell">
-          <select
-            value={player.invitedBy || ''}
-            onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
-            className="guest-select-full"
-          >
-            <option value="">Not a Guest</option>
-            {players
-              .filter(p => !p.invitedBy) // Only show non-guests as potential hosts
-              .map(member => (
-                <option key={member.rowIndex} value={member.firstName + ' ' + member.lastName}>
-                  {member.firstName} {member.lastName}
-                </option>
-            ))}
-          </select>
-        </td>
-        <td className="team-cell">
-          <select
-            value={player.team || ''}
-            onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-            className="team-select-full"
-          >
-            <option value="">Select Team</option>
-            {teamNumbers.map(num => (
-              <option key={num} value={num}>
-                Team {num}
-              </option>
-            ))}
-          </select>
-        </td>
-        <div className="delete-action">
-          <button 
-            onClick={() => handleDelete(player.rowIndex)}
-            className="delete-button"
-          >
-            Delete
-          </button>
-        </div>
-      </tr>
-    ))}
-  </tbody>
-</table>
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Hcp</th>
+                <th>Guest Of</th>
+                <th>Team</th>
+              </tr>
+            </thead>
+            <tbody {...swipeHandlers}>
+              {groupPlayersByTeam(players).map((player, index) => (
+                <tr 
+                  key={index}
+                  data-row-index={player.rowIndex}
+                  className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
+                    player.invitedBy ? 'guest-row' : ''
+                  }`}
+                  {...swipeHandlers}
+                >
+                  <td>{player.firstName}</td>
+                  <td>{player.lastName}</td>
+                  <td>{player.handicap}</td>
+                  <td className="guest-cell">
+                    <select
+                      value={player.invitedBy || ''}
+                      onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
+                      className="guest-select-full"
+                    >
+                      <option value="">Not a Guest</option>
+                      {players
+                        .filter(p => !p.invitedBy)
+                        .map(member => (
+                          <option key={member.rowIndex} value={member.firstName + ' ' + member.lastName}>
+                            {member.firstName} {member.lastName}
+                          </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="team-cell">
+                    <select
+                      value={player.team || ''}
+                      onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+                      className="team-select-full"
+                    >
+                      <option value="">Select Team</option>
+                      {teamNumbers.map(num => (
+                        <option key={num} value={num}>
+                          Team {num}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <div className="delete-action">
+                    <button 
+                      onClick={() => handleDelete(player.rowIndex)}
+                      className="delete-button"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
