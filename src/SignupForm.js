@@ -17,10 +17,21 @@ function SignupForm() {
 
   const handleNotificationPermission = async () => {
     try {
+      if (!('Notification' in window)) {
+        console.log('Notifications not supported');
+        alert('This browser does not support notifications');
+        return;
+      }
+      
+      console.log('Requesting notification permission...');
       const token = await requestNotificationPermission();
+      console.log('Received token:', token);
+      
       if (token) {
+        console.log('Notification permission granted');
         alert('Notifications enabled successfully!');
       } else {
+        console.log('Notification permission denied or error occurred');
         alert('Please allow notifications to receive updates.');
       }
     } catch (error) {

@@ -8,34 +8,52 @@ const firebaseConfig = {
   storageBucket: "gfy-golf-223c9.firebasestorage.app",
   messagingSenderId: "370898390679",
   appId: "1:370898390679:web:bf518b583384e5c46023d2"
-  // We can skip measurementId unless you want analytics
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
-const vapidKey = process.env.REACT_APP_FIREBASE_VAPID_KEY;
+let messaging = null;
+
+try {
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  
+  // Only initialize messaging if we're in a browser environment
+  if (typeof window !== 'undefined' && 'Notification' in window) {
+    messaging = getMessaging(app);
+  }
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+}
 
 export const requestNotificationPermission = async () => {
+  if (!messaging) {
+    console.log('Messaging not initialized');
+    return null;
+  }
+
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       const token = await getToken(messaging, {
-        vapidKey: vapidKey
+        vapidKey: process.env.REACT_APP_FIREBASE_VAPID_KEY
       });
       console.log('Notification Token:', token);
       return token;
     }
   } catch (err) {
     console.error('Notification permission error:', err);
+    return null;
   }
 };
 
 export const onMessageListener = () =>
   new Promise((resolve) => {
-    onMessage(messaging, (payload) => {
-      resolve(payload);
-    });
-});
+    if (messaging) {
+      onMessage(messaging, (payload) => {
+        resolve(payload);
+      });
+    } else {
+      resolve(null);
+    }
+  });
 
 export default app;
