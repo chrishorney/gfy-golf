@@ -14,16 +14,44 @@ function WeatherWidget() {
     const getFridayWeather = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${MCKINNEY_LAT}&lon=${MCKINNEY_LONG}&appid=${API_KEY}&units=imperial`
-        );
-        const data = await response.json();
+        
+        // Log the API URL for debugging (remove in production)
+        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${MCKINNEY_LAT}&lon=${MCKINNEY_LONG}&appid=${API_KEY}&units=imperial`;
+        console.log('Fetching weather from:', apiUrl);
 
-        // Find next Friday's forecast
-        const fridayForecast = data.list.find(item => {
-          const date = new Date(item.dt * 1000);
-          return date.getDay() === 5 && date.getHours() === 15; // Friday at 3PM
-        });
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Weather API response:', data); // For debugging
+
+        // Get today's date
+        const today = new Date();
+        
+        // Find next Friday
+        const nextFriday = new Date();
+        nextFriday.setDate(today.getDate() + ((7 - today.getDay() + 5) % 7 || 7));
+        nextFriday.setHours(15, 0, 0, 0); // Set to 3 PM
+
+        console.log('Looking for forecast for:', nextFriday);
+
+        // Find forecast closest to next Friday 3 PM
+        const fridayForecast = data.list.reduce((closest, current) => {
+          const forecastDate = new Date(current.dt * 1000);
+          const closestDate = closest ? new Date(closest.dt * 1000) : null;
+          
+          if (!closest) return current;
+          
+          const currentDiff = Math.abs(forecastDate - nextFriday);
+          const closestDiff = Math.abs(closestDate - nextFriday);
+          
+          return currentDiff < closestDiff ? current : closest;
+        }, null);
+
+        console.log('Found forecast:', fridayForecast);
 
         if (fridayForecast) {
           setWeather({
@@ -32,29 +60,41 @@ function WeatherWidget() {
             description: fridayForecast.weather[0].main,
             icon: fridayForecast.weather[0].icon,
             wind: Math.round(fridayForecast.wind.speed),
-            precipitation: Math.round(fridayForecast.pop * 100), // Probability of precipitation
+            precipitation: Math.round(fridayForecast.pop * 100),
             date: new Date(fridayForecast.dt * 1000).toLocaleDateString()
           });
+          setError(null);
+        } else {
+          throw new Error('No forecast found for Friday');
         }
-        setError(null);
       } catch (err) {
-        setError('Failed to load weather');
         console.error('Weather fetch error:', err);
+        setError(`Failed to load weather: ${err.message}`);
       } finally {
         setLoading(false);
       }
     };
 
-    getFridayWeather();
+    if (API_KEY) {
+      getFridayWeather();
+    } else {
+      setError('Weather API key not found');
+      setLoading(false);
+    }
   }, [API_KEY]);
 
   if (loading) return <div className="weather-widget loading">Loading weather...</div>;
-  if (error) return <div className="weather-widget error">{error}</div>;
+  if (error) return (
+    <div className="weather-widget error">
+      <p>{error}</p>
+      <p className="error-details">Please try refreshing the page</p>
+    </div>
+  );
   if (!weather) return null;
 
   return (
     <div className="weather-widget">
-      <h3>Friday's Golf Weather</h3>
+      <h3>Friday's Golf Weather ({weather.date})</h3>
       <div className="weather-content">
         <img 
           src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
