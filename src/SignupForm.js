@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SignupForm.css';
 import WeatherWidget from './components/WeatherWidget';
+import { requestNotificationPermission } from './firebase-config';
 
 function SignupForm() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,20 @@ function SignupForm() {
   const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDlspxgS5Edpg4F0XGHzz3mpTwftM7hl7l_VgxIWgLUaM4em1-Q_wKB8YZQCHkYErf/exec';
+
+  const handleNotificationPermission = async () => {
+    try {
+      const token = await requestNotificationPermission();
+      if (token) {
+        alert('Notifications enabled successfully!');
+      } else {
+        alert('Please allow notifications to receive updates.');
+      }
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+      alert('Error enabling notifications. Please try again.');
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +81,14 @@ function SignupForm() {
       <div className="signup-container">
         <form onSubmit={handleSubmit} className="signup-form">
           <h2>Golf Group Signup</h2>
+          
+          <button 
+            type="button"
+            className="notification-button"
+            onClick={handleNotificationPermission}
+          >
+            Enable Notifications
+          </button>
           
           <div className="form-group">
             <label htmlFor="firstName">First Name</label>
