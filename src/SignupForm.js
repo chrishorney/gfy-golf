@@ -61,81 +61,83 @@ function SignupForm() {
   };
 
   return (
-    <div className="signup-container">
+    <div>
       <WeatherWidget />
-      <form onSubmit={handleSubmit} className="signup-form">
-        <h2>Golf Group Signup</h2>
-        
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      <div className="signup-container">
+        <form onSubmit={handleSubmit} className="signup-form">
+          <h2>Golf Group Signup</h2>
+          
+          <div className="form-group">
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="handicap">Handicap</label>
-          <input
-            type="number"
-            id="handicap"
-            name="handicap"
-            value={formData.handicap}
-            onChange={handleChange}
-            min="0"
-            max="54"
-            step="0.1"
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="handicap">Handicap</label>
+            <input
+              type="number"
+              id="handicap"
+              name="handicap"
+              value={formData.handicap}
+              onChange={handleChange}
+              min="0"
+              max="54"
+              step="0.1"
+              required
+            />
+          </div>
 
-        <button 
-          type="submit" 
-          className="submit-button"
-          disabled={submitStatus === 'submitting'}
-        >
-          {submitStatus === 'submitting' ? 'Submitting...' : "I'm in!"}
-        </button>
+          <button 
+            type="submit" 
+            className="submit-button"
+            disabled={submitStatus === 'submitting'}
+          >
+            {submitStatus === 'submitting' ? 'Submitting...' : "I'm in!"}
+          </button>
 
-        <button 
-          type="button" 
-          className="view-list-button"
-          onClick={handleViewList}
-        >
-          View Weekly List
-        </button>
+          <button 
+            type="button" 
+            className="view-list-button"
+            onClick={handleViewList}
+          >
+            View Weekly List
+          </button>
 
-        <button 
-          type="button" 
-          className="yearly-stats-button"
-          onClick={handleYearlyStats}
-        >
-          Yearly Stats
-        </button>
+          <button 
+            type="button" 
+            className="yearly-stats-button"
+            onClick={handleYearlyStats}
+          >
+            Yearly Stats
+          </button>
 
-        {submitStatus === 'success' && (
-          <p className="success-message">Successfully signed up!</p>
-        )}
-        {submitStatus === 'error' && (
-          <p className="error-message">Error submitting form. Please try again.</p>
-        )}
-      </form>
+          {submitStatus === 'success' && (
+            <p className="success-message">Successfully signed up!</p>
+          )}
+          {submitStatus === 'error' && (
+            <p className="error-message">Error submitting form. Please try again.</p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }
