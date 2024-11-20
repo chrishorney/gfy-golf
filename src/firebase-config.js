@@ -10,11 +10,12 @@ const firebaseConfig = {
   appId: "1:370898390679:web:bf518b583384e5c46023d2"
 };
 
+let app;
 let messaging = null;
 
 try {
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+  app = initializeApp(firebaseConfig);
   
   // Only initialize messaging if we're in a browser environment
   if (typeof window !== 'undefined' && 'Notification' in window) {
