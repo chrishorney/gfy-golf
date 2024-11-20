@@ -9,6 +9,13 @@
     top: 20px;
   }
   
+  .weather-date {
+    text-align: center;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+  }
+  
   .weather-widget h3 {
     margin: 0 0 10px 0;
     color: #333;
