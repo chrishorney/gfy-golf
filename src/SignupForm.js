@@ -106,7 +106,7 @@ function SignupForm() {
       <WeatherWidget />
       <div className="signup-container">
         <form onSubmit={handleSubmit} className="signup-form">
-          <h2>Golf Group Signup</h2>
+          <h2>GFY Friday Signup</h2>
           
           <div className="form-group">
             <label htmlFor="firstName">First Name</label>
