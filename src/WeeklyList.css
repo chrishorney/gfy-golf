@@ -238,3 +238,20 @@
 .cancel-delete:hover {
     background-color: #919191;
 }
+
+/* Add or update these styles */
+.player-row {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+}
+
+/* Also apply to table cells */
+.player-row td {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}

@@ -16,7 +16,7 @@ function WeeklyList() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const longPressTimer = useRef(null);
-  const longPressTimeout = 800; // Increased to 800ms for easier testing
+  const longPressTimeout = 500; // Reduced to 500ms for quicker response
   const navigate = useNavigate();
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollStartPosition = useRef(null);
