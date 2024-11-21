@@ -12,7 +12,7 @@ function WeeklyList() {
   const [updatingGuest, setUpdatingGuest] = useState(false);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZ2uOPLvYzSOaDydSFzbq5TLR5TerR-c2StKxYExRaizS5P9ZvaLV31o4OW-kxZGsQ/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3-ZvI7G7QyFwKojA6h93ZI2hpd94TtiRjhZ-mud_aACu4KQPp6c_5FVD3ZmTZkJDs/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
