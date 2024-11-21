@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import './WeeklyList.css';
@@ -15,6 +15,10 @@ function WeeklyList() {
   const [error, setError] = useState(null);
   const [swipedRowId, setSwipedRowId] = useState(null);
   const [updatingGuest, setUpdatingGuest] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const longPressTimer = useRef(null);
+  const longPressTimeout = 500; // 500ms for long press
   const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6WIq-j8mnCzGFnU6hGY0nCCMY1lxKHD98DB4lltOrx9jLMoau2BVdX4F-ZLhQn50I/exec';
@@ -182,6 +186,36 @@ function WeeklyList() {
     navigate('/');
   };
 
+  const handleTouchStart = (player) => {
+    longPressTimer.current = setTimeout(() => {
+      setSelectedPlayer(player);
+      setShowDeletePopup(true);
+      // Add long-press visual feedback
+      document.querySelector(`[data-row-id="${player.rowIndex}"]`)?.classList.add('long-press');
+    }, longPressTimeout);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      // Remove visual feedback
+      document.querySelectorAll('.long-press').forEach(el => el.classList.remove('long-press'));
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedPlayer) {
+      try {
+        // Your existing delete logic here
+        await deletePlayer(selectedPlayer.rowIndex);
+        setShowDeletePopup(false);
+        setSelectedPlayer(null);
+      } catch (error) {
+        console.error('Error deleting player:', error);
+      }
+    }
+  };
+
   const swipeHandlers = useSwipeable({
     onSwipedLeft: (eventData) => {
       const row = eventData.event.target.closest('tr');
@@ -242,7 +276,11 @@ function WeeklyList() {
                     className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
                       player.invitedBy ? 'guest-row' : ''
                     }`}
-                    {...swipeHandlers}
+                    onTouchStart={() => handleTouchStart(player)}
+                    onTouchEnd={handleTouchEnd}
+                    onMouseDown={() => handleTouchStart(player)}
+                    onMouseUp={handleTouchEnd}
+                    onMouseLeave={handleTouchEnd}
                   >
                     <td>{player.firstName}</td>
                     <td>{player.lastName}</td>
@@ -293,6 +331,25 @@ function WeeklyList() {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Popup */}
+      {showDeletePopup && (
+        <>
+          <div className="popup-overlay" onClick={() => setShowDeletePopup(false)} />
+          <div className="delete-popup">
+            <h3 className="popup-title">Delete Player</h3>
+            <p>Are you sure you want to delete {selectedPlayer?.firstName} {selectedPlayer?.lastName}?</p>
+            <div className="popup-buttons">
+              <button className="popup-button cancel-delete" onClick={() => setShowDeletePopup(false)}>
+                Cancel
+              </button>
+              <button className="popup-button confirm-delete" onClick={handleDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
