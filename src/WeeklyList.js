@@ -95,41 +95,40 @@ function WeeklyList() {
     }
   };
 
-  const handleGuestChange = async (rowIndex, invitedBy) => {
+  const handleGuestChange = async (rowIndex, guestOf) => {
     try {
-      if (updatingGuest) return; // Prevent multiple simultaneous updates
+      if (updatingGuest) return;
       setUpdatingGuest(true);
-      console.log('Updating guest status:', { rowIndex, invitedBy });
+      console.log('Starting guest update:', { rowIndex, guestOf });
 
-      // Optimistically update UI
-      setPlayers(prevPlayers => 
-        prevPlayers.map(player => 
-          player.rowIndex === rowIndex 
-            ? { ...player, invitedBy: invitedBy }
-            : player
-        )
-      );
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.append('action', 'updateGuest');
+      url.searchParams.append('row', rowIndex);
+      url.searchParams.append('guestOf', guestOf);
+      
+      console.log('Making API call to:', url.toString());
 
-      // Make API call
-      const url = `${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`;
-      console.log('Calling API:', url);
-  
       const response = await fetch(url, {
         method: 'GET',
         mode: 'no-cors',
       });
-      
-      console.log('API response received');
 
-      // Wait before refreshing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Refresh the list
+      console.log('Response received:', response);
+
+      setPlayers(prevPlayers => 
+        prevPlayers.map(player => 
+          player.rowIndex === rowIndex 
+            ? { ...player, guestOf: guestOf }
+            : player
+        )
+      );
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
       await fetchWeeklyPlayers();
       console.log('Player list refreshed');
 
     } catch (error) {
-      console.error('Error updating guest status:', error);
+      console.error('Error in handleGuestChange:', error);
       alert('Failed to update guest status. Please try again.');
     } finally {
       setUpdatingGuest(false);
@@ -198,7 +197,7 @@ function WeeklyList() {
                     key={index}
                     data-row-index={player.rowIndex}
                     className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
-                      player.invitedBy ? 'guest-row' : ''
+                      player.guestOf ? 'guest-row' : ''
                     }`}
                     {...swipeHandlers}
                   >
@@ -207,7 +206,7 @@ function WeeklyList() {
                     <td>{player.handicap}</td>
                     <td className="guest-cell">
                       <select
-                        value={player.invitedBy || ''}
+                        value={player.guestOf || ''}
                         onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
                         className="guest-select-full"
                         disabled={updatingGuest}
