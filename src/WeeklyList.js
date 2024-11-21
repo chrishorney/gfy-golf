@@ -20,6 +20,8 @@ function WeeklyList() {
   const longPressTimer = useRef(null);
   const longPressTimeout = 800; // Increased to 800ms for easier testing
   const navigate = useNavigate();
+  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollStartPosition = useRef(null);
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6WIq-j8mnCzGFnU6hGY0nCCMY1lxKHD98DB4lltOrx9jLMoau2BVdX4F-ZLhQn50I/exec';
 
@@ -194,24 +196,44 @@ function WeeklyList() {
   };
 
   const handleTouchStart = (player, e) => {
-    e.preventDefault(); // Prevent default touch behavior
-    console.log('Touch start'); // Debug log
-    
+    // Store initial touch position
+    scrollStartPosition.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    };
+
     longPressTimer.current = setTimeout(() => {
-      console.log('Long press detected'); // Debug log
-      setSelectedPlayer(player);
-      setShowDeletePopup(true);
+      // Only show delete popup if we haven't scrolled
+      if (!isScrolling) {
+        setSelectedPlayer(player);
+        setShowDeletePopup(true);
+      }
     }, longPressTimeout);
   };
 
-  const handleTouchEnd = (e) => {
-    e.preventDefault();
-    console.log('Touch end'); // Debug log
-    
+  const handleTouchMove = (e) => {
+    if (!scrollStartPosition.current) return;
+
+    const deltaX = Math.abs(e.touches[0].clientX - scrollStartPosition.current.x);
+    const deltaY = Math.abs(e.touches[0].clientY - scrollStartPosition.current.y);
+
+    // If user has moved finger more than 10px, consider it a scroll
+    if (deltaX > 10 || deltaY > 10) {
+      setIsScrolling(true);
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
+    setIsScrolling(false);
+    scrollStartPosition.current = null;
   };
 
   const handleDelete = async () => {
@@ -283,6 +305,7 @@ function WeeklyList() {
                       player.invitedBy ? 'guest-row' : ''
                     }`}
                     onTouchStart={(e) => handleTouchStart(player, e)}
+                    onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
                     onTouchCancel={handleTouchEnd}
                     onContextMenu={preventContextMenu}
