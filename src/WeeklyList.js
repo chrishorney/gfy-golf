@@ -111,16 +111,22 @@ function WeeklyList() {
       );
 
       // Make API call
-      await fetch(`${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`, {
+      const url = `${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`;
+      console.log('Calling API:', url);
+  
+      const response = await fetch(url, {
         method: 'GET',
         mode: 'no-cors',
       });
+      
+      console.log('API response received');
 
       // Wait before refreshing
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Refresh the list
       await fetchWeeklyPlayers();
+      console.log('Player list refreshed');
 
     } catch (error) {
       console.error('Error updating guest status:', error);
