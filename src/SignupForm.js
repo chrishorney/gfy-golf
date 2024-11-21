@@ -13,7 +13,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6WIq-j8mnCzGFnU6hGY0nCCMY1lxKHD98DB4lltOrx9jLMoau2BVdX4F-ZLhQn50I/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMX1uaq8YSXlYzxkp53qGC9-EBuk3e3rZjlrHLNDRsPOZzzqim406tEgQ87iAQeTdN/exec';
 
   const handleNotificationPermission = async () => {
     try {
@@ -53,50 +53,84 @@ function SignupForm() {
     setSubmitStatus('submitting');
 
     try {
-      const url = new URL(SCRIPT_URL);
-      // Add action parameter to specify we're adding a player
-      url.searchParams.append('action', 'addPlayer');
-      Object.keys(formData).forEach(key => {
-        url.searchParams.append(key, formData[key]);
+      // First, check player count using JSONP
+      const playerCountPromise = new Promise((resolve, reject) => {
+        const callbackName = 'jsonpCallback_' + Date.now();
+        const script = document.createElement('script');
+        
+        window[callbackName] = (response) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(response);
+        };
+
+        script.onerror = () => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('Failed to get player count'));
+        };
+
+        script.src = `${SCRIPT_URL}?action=getPlayerCount&callback=${callbackName}`;
+        document.body.appendChild(script);
       });
 
-      // First, get the current signup count
-      const countUrl = new URL(SCRIPT_URL);
-      countUrl.searchParams.append('action', 'getPlayerCount');
-      const countResponse = await fetch(countUrl);
-      const playerCount = await countResponse.json();
-
-      // Submit the form
-      await fetch(url, {
-        method: 'POST',
-        mode: 'no-cors'
-      });
-
-      // Send notification with player count
-      const date = new Date();
-      const formattedDate = date.toLocaleDateString('en-US', {
-        weekday: 'long',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      // Send notification to your Firebase function
-      const notificationUrl = new URL(SCRIPT_URL);
-      notificationUrl.searchParams.append('action', 'sendNotification');
-      notificationUrl.searchParams.append('title', `GFY Golf Update - ${formattedDate}`);
-      notificationUrl.searchParams.append('body', `${playerCount + 1} ${playerCount + 1 === 1 ? 'player has' : 'players have'} signed up for golf!`);
+      const countResponse = await playerCountPromise;
       
-      await fetch(notificationUrl, {
-        method: 'POST',
-        mode: 'no-cors'
+      if (countResponse.count >= 40) {
+        setSubmitStatus('error');
+        alert('Sorry, the maximum number of players (40) has been reached.');
+        return;
+      }
+
+      // Submit the form using JSONP
+      const submitPromise = new Promise((resolve, reject) => {
+        const callbackName = 'jsonpCallback_' + Date.now();
+        const script = document.createElement('script');
+        
+        window[callbackName] = (response) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(response);
+        };
+
+        script.onerror = () => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('Failed to submit form'));
+        };
+
+        const queryParams = new URLSearchParams({
+          action: 'addPlayer',
+          callback: callbackName,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          handicap: formData.handicap
+        }).toString();
+
+        script.src = `${SCRIPT_URL}?${queryParams}`;
+        document.body.appendChild(script);
       });
 
-      setSubmitStatus('success');
-      setFormData({ firstName: '', lastName: '', handicap: '' });
+      const response = await submitPromise;
 
-      setTimeout(() => {
-        navigate('/weekly');
-      }, 1500);
+      if (response.status === 'success') {
+        setSubmitStatus('success');
+        setFormData({ firstName: '', lastName: '', handicap: '' });
+
+        // Send notification
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        setTimeout(() => {
+          navigate('/weekly');
+        }, 1500);
+      } else {
+        throw new Error(response.message || 'Failed to submit form');
+      }
 
     } catch (error) {
       console.error('Error:', error);
