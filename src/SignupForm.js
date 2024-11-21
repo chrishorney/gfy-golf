@@ -13,7 +13,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMX1uaq8YSXlYzxkp53qGC9-EBuk3e3rZjlrHLNDRsPOZzzqim406tEgQ87iAQeTdN/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9yhSch8hj4BFG2Ff9pL5EzN0g_YILa3gHQd3LP6XstLu-fsXH3HZPFQszVWwpLVs2/exec';
 
   const handleNotificationPermission = async () => {
     try {
@@ -50,90 +50,64 @@ function SignupForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Starting form submission...');
     setSubmitStatus('submitting');
 
     try {
-      // First, check player count using JSONP
-      const playerCountPromise = new Promise((resolve, reject) => {
-        const callbackName = 'jsonpCallback_' + Date.now();
-        const script = document.createElement('script');
-        
-        window[callbackName] = (response) => {
-          delete window[callbackName];
-          document.body.removeChild(script);
-          resolve(response);
-        };
+      // Create the URL with parameters
+      const url = new URL(SCRIPT_URL);
+      url.searchParams.append('action', 'addPlayer');
+      url.searchParams.append('callback', 'callback_' + Date.now());
+      url.searchParams.append('firstName', formData.firstName);
+      url.searchParams.append('lastName', formData.lastName);
+      url.searchParams.append('handicap', formData.handicap);
 
-        script.onerror = () => {
-          delete window[callbackName];
-          document.body.removeChild(script);
-          reject(new Error('Failed to get player count'));
-        };
+      console.log('Submitting to URL:', url.toString());
 
-        script.src = `${SCRIPT_URL}?action=getPlayerCount&callback=${callbackName}`;
-        document.body.appendChild(script);
-      });
-
-      const countResponse = await playerCountPromise;
-      
-      if (countResponse.count >= 40) {
-        setSubmitStatus('error');
-        alert('Sorry, the maximum number of players (40) has been reached.');
-        return;
-      }
-
-      // Submit the form using JSONP
+      // Create a promise to handle the JSONP response
       const submitPromise = new Promise((resolve, reject) => {
-        const callbackName = 'jsonpCallback_' + Date.now();
+        const callbackName = 'callback_' + Date.now();
         const script = document.createElement('script');
         
+        // Set up the callback function
         window[callbackName] = (response) => {
-          delete window[callbackName];
+          console.log('Received response:', response);
           document.body.removeChild(script);
-          resolve(response);
+          delete window[callbackName];
+          if (response.status === 'success') {
+            resolve(response);
+          } else {
+            reject(new Error(response.message || 'Submission failed'));
+          }
         };
 
+        // Handle script errors
         script.onerror = () => {
-          delete window[callbackName];
           document.body.removeChild(script);
+          delete window[callbackName];
           reject(new Error('Failed to submit form'));
         };
 
-        const queryParams = new URLSearchParams({
-          action: 'addPlayer',
-          callback: callbackName,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          handicap: formData.handicap
-        }).toString();
-
-        script.src = `${SCRIPT_URL}?${queryParams}`;
+        // Set the script source and append to document
+        script.src = url.toString();
         document.body.appendChild(script);
       });
 
+      // Wait for the response
       const response = await submitPromise;
+      console.log('Submission successful:', response);
 
-      if (response.status === 'success') {
-        setSubmitStatus('success');
-        setFormData({ firstName: '', lastName: '', handicap: '' });
+      // Handle successful submission
+      setSubmitStatus('success');
+      setFormData({ firstName: '', lastName: '', handicap: '' });
 
-        // Send notification
-        const date = new Date();
-        const formattedDate = date.toLocaleDateString('en-US', {
-          weekday: 'long',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        setTimeout(() => {
-          navigate('/weekly');
-        }, 1500);
-      } else {
-        throw new Error(response.message || 'Failed to submit form');
-      }
+      // Navigate after a delay
+      setTimeout(() => {
+        navigate('/weekly');
+      }, 1500);
 
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Submission error:', error);
       setSubmitStatus('error');
     }
   };
