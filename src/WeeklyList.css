@@ -1,7 +1,22 @@
+:root {
+  /* Golf-themed color palette (matching SignupForm.css) */
+  --fairway-green: #2B5233;     /* Dark green for primary elements */
+  --light-grass: #8DAF7C;       /* Lighter green for hover states */
+  --sand-beige: #E8DCC4;        /* Warm beige for background */
+  --white-ball: #FFFFFF;        /* Pure white for contrast */
+  --flag-red: #D42E2E;          /* Red for error/delete states */
+  --bunker-gray: #B4B4B4;       /* Gray for disabled states */
+  --divider-green: #C8D5C1;     /* Light green for borders/dividers */
+}
+
 .weekly-list-container {
     max-width: 800px;
     margin: 2rem auto;
     padding: 1rem;
+    background-color: var(--white-ball);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(43, 82, 51, 0.15);
+    position: relative;
 }
 
 .header-section {
@@ -10,40 +25,43 @@
     align-items: center;
     margin-bottom: 2rem;
     padding: 0 1rem;
+    border-bottom: 2px solid var(--divider-green);
 }
 
 .header-section h2 {
     margin: 0;
     font-size: 1.2rem;
+    color: var(--fairway-green);
 }
 
 .back-button {
     padding: 0.75rem 1.5rem;
-    background-color: #2196F3;
-    color: white;
+    background-color: var(--fairway-green);
+    color: var(--white-ball);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .back-button:hover {
-    background-color: #1976D2;
+    background-color: var(--light-grass);
 }
 
 .players-list {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
-    position: relative;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    position: relative;
+    touch-action: pan-x pan-y;
 }
 
 .players-list table {
     width: 100%;
+    min-width: 600px;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: fixed;
@@ -53,84 +71,81 @@
 .players-list td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--divider-green);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.players-list th {
-    background-color: #f5f5f5;
-    font-weight: 600;
-}
-
-/* Specific column widths */
 .players-list th:nth-child(1),
 .players-list td:nth-child(1) {
-    width: 15%;
+    width: 22%;
+    min-width: 100px;
 }
 
 .players-list th:nth-child(2),
 .players-list td:nth-child(2) {
-    width: 15%;
+    width: 22%;
+    min-width: 100px;
 }
 
 .players-list th:nth-child(3),
 .players-list td:nth-child(3) {
-    width: 15%;
+    width: 12%;
+    min-width: 70px;
 }
 
 .players-list th:nth-child(4),
 .players-list td:nth-child(4) {
-    width: 27.5%;
+    width: 22%;
+    min-width: 120px;
 }
 
 .players-list th:nth-child(5),
 .players-list td:nth-child(5) {
-    width: 27.5%; /* Team */
+    width: 22%;
+    min-width: 100px;
 }
 
+.players-list th {
+    background-color: var(--fairway-green);
+    color: var(--white-ball);
+    font-weight: 600;
+}
+
+/* Player row with swipe functionality */
 .player-row {
     position: relative;
-    transition: transform 0.3s ease;
-    background: white;
-    touch-action: pan-x;
+    background: var(--white-ball);
+    transition: background-color 0.3s ease;
     user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    cursor: grab;
-}
-
-.player-row.swiped {
-    transform: translateX(-60px);
-}
-
-.player-row td {
-    position: relative;
-    background: white;
-    z-index: 1;
-}
-
-.team-separator {
-    border-top: 2px solid #e0e0e0;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    touch-action: pan-x pan-y;
 }
 
 .player-row:nth-of-type(even) {
-    background-color: #f8f9fa;
+    background-color: rgba(139, 175, 124, 0.05);
 }
 
+.player-row:hover {
+    background-color: rgba(139, 175, 124, 0.2);
+}
+
+.team-separator {
+    border-top: 2px solid var(--divider-green);
+}
+
+/* Delete action styling */
 .delete-action {
     position: absolute;
     right: -60px;
     top: 0;
-    height: 55px;
+    height: 100%;
     width: 60px;
-    background-color: #dc3545;
+    background-color: var(--flag-red);
     z-index: 2;
-    display: flex; /* Changed from 'none' to 'flex' */
-    align-items: center;
-    justify-content: center;
-}
-
-.player-row.swiped .delete-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -139,7 +154,7 @@
 .delete-button {
     width: 100%;
     height: 100%;
-    color: white;
+    color: var(--white-ball);
     border: none;
     background: none;
     cursor: pointer;
@@ -147,39 +162,51 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 3; /* Added z-index */
 }
 
 .delete-button:hover {
-    background-color: #c82333;
+    background-color: #b71c1c;
 }
 
-.team-cell {
-    padding: 0.75rem !important;
-    background: white;
-    z-index: 1;
-}
-
+/* Team select styling */
 .team-select-full {
     width: 100%;
     padding: 4px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--divider-green);
     border-radius: 4px;
     font-size: 0.85rem;
-    background-color: white;
+    background-color: var(--white-ball);
     cursor: pointer;
-    position: relative;
-    z-index: 1;
+    color: var(--fairway-green);
 }
 
 .team-select-full:focus {
     outline: none;
-    border-color: #2196F3;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+    border-color: var(--fairway-green);
+    box-shadow: 0 0 0 2px rgba(43, 82, 51, 0.1);
 }
 
-.team-select-full option {
-    padding: 4px;
+/* Guest row styling */
+.guest-row {
+    background-color: rgba(139, 175, 124, 0.15);
+    border-left: 3px solid var(--fairway-green);
+}
+
+.guest-row td {
+    background-color: transparent;
+}
+
+/* Title and count styling */
+.title-count {
+    display: flex;
+    align-items: center;
+}
+
+.player-count {
+    font-size: 1rem;
+    color: var(--bunker-gray);
+    font-weight: normal;
+    margin-left: 1rem;
 }
 
 /* Loading and Error States */
@@ -191,54 +218,111 @@
 }
 
 .error {
-    color: #dc3545;
+    color: var(--flag-red);
 }
 
+/* Mobile optimizations */
 @media (max-width: 768px) {
     .weekly-list-container {
+        margin: 1rem;
         padding: 0.5rem;
-        margin: 1rem auto;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
-    .header-section {
-        padding: 0 0.5rem;
+    .players-list {
+        margin: 0;
+        min-width: 100%;
     }
 
-    .players-list th {
-        font-size: 0.9rem;
-        padding: 0.5rem;
+    .players-list table {
+        min-width: 600px;
     }
+
+    /* Improve touch targets */
+    .players-list th,
     .players-list td {
+        padding: 0.75rem;
         font-size: 0.9rem;
-        padding: 0.5rem;
-    }
-
-    .back-button {
-        padding: 0.5rem 1rem;
-    }
-
-    .team-select-full {
-        padding: 6px;
-        font-size: 0.85rem;
     }
 }
 
-.title-count {
-    display: flex;
-    align-items: center;
-  }
-  
-  .player-count {
-    font-size: 1rem;
-    color: #666;
-    font-weight: normal;
-  }
+/* Smooth scrolling */
+.players-list {
+    scroll-behavior: smooth;
+}
+/* Optional: Add visual feedback for active swipe */
+.player-row.swiping {
+    background-color: rgba(139, 175, 124, 0.1);
+}
 
-  .guest-row {
-    background-color: #f8f9fa;
-    border-left: 3px solid #2196F3;
-  }
-  
-  .guest-row td {
-    background-color: #f8f9fa;
-  }
+/* Visual feedback for long press */
+.player-row.long-press {
+    background-color: rgba(212, 46, 46, 0.1);
+}
+
+/* Delete confirmation popup */
+.delete-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white-ball);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.popup-title {
+    color: var(--fairway-green);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.popup-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-delete {
+    background-color: var(--flag-red);
+    color: var(--white-ball);
+}
+
+.confirm-delete:hover {
+    background-color: #b71c1c;
+}
+
+.cancel-delete {
+    background-color: var(--bunker-gray);
+    color: var(--white-ball);
+}
+
+.cancel-delete:hover {
+    background-color: #919191;
+}
