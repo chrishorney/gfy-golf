@@ -4,6 +4,11 @@ import { useSwipeable } from 'react-swipeable';
 import './WeeklyList.css';
 import WeatherWidget from './components/WeatherWidget';
 
+const CORS_HEADERS = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
+};
+
 function WeeklyList() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +17,7 @@ function WeeklyList() {
   const [updatingGuest, setUpdatingGuest] = useState(false);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwP2zYpmpp5eUagltf4B1hDgGKf7BJQC8_pw8B89QupFz7ng3ss5IWqUaT5hH5pfSxM/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6WIq-j8mnCzGFnU6hGY0nCCMY1lxKHD98DB4lltOrx9jLMoau2BVdX4F-ZLhQn50I/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -34,25 +39,49 @@ function WeeklyList() {
   const fetchWeeklyPlayers = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'omit'
+      console.log('Fetching players...');
+      
+      // Single request with JSONP approach
+      const script = document.createElement('script');
+      const callbackName = 'jsonpCallback_' + Date.now();
+      
+      // Create a promise to handle the JSONP response
+      const jsonpPromise = new Promise((resolve, reject) => {
+        window[callbackName] = (data) => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          resolve(data);
+        };
+        
+        script.onerror = () => {
+          delete window[callbackName];
+          document.body.removeChild(script);
+          reject(new Error('Failed to load players'));
+        };
       });
+
+      // Add script to page
+      script.src = `${SCRIPT_URL}?action=getWeeklyPlayers&callback=${callbackName}`;
+      document.body.appendChild(script);
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      // Wait for response with timeout
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timed out')), 10000);
+      });
+
+      // Race between response and timeout
+      const data = await Promise.race([jsonpPromise, timeoutPromise]);
+      
+      if (data && data.players) {
+        console.log('Fetched players:', data.players);
+        setPlayers(data.players);
+        setError(null);
+      } else {
+        throw new Error('No players data received');
       }
-      
-      const data = await response.json();
-      console.log('Fetched players:', data.players);
-      setPlayers(data.players || []);
-      setError(null);
     } catch (err) {
       setError('Failed to load players');
-      console.error('Error:', err);
+      console.error('Fetch Error:', err);
     } finally {
       setLoading(false);
     }
@@ -62,11 +91,13 @@ function WeeklyList() {
     try {
       console.log('Attempting to update team:', { rowIndex, teamNumber });
   
-      const response = await fetch(`${SCRIPT_URL}?action=updateTeam&row=${rowIndex}&team=${teamNumber}`, {
+      // First request with no-cors
+      await fetch(`${SCRIPT_URL}?action=updateTeam&row=${rowIndex}&team=${teamNumber}`, {
         method: 'GET',
-        mode: 'no-cors',
+        mode: 'no-cors'
       });
-  
+
+      // Update local state immediately
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
@@ -75,9 +106,9 @@ function WeeklyList() {
         )
       );
   
-      setTimeout(() => {
-        fetchWeeklyPlayers();
-      }, 1000);
+      // Wait and refresh
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await fetchWeeklyPlayers();
   
     } catch (error) {
       console.error('Error updating team number:', error);
@@ -89,15 +120,17 @@ function WeeklyList() {
     if (window.confirm('Bitching out?')) {
       try {
         console.log('Attempting to delete row:', rowIndex);
-        const response = await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+        
+        // First request with no-cors
+        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
           method: 'GET',
           mode: 'no-cors'
         });
 
-        setTimeout(async () => {
-          await fetchWeeklyPlayers();
-          setSwipedRowId(null);
-        }, 1000);
+        // Wait and refresh
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await fetchWeeklyPlayers();
+        setSwipedRowId(null);
 
       } catch (error) {
         console.error('Error deleting player:', error);
@@ -106,55 +139,44 @@ function WeeklyList() {
     }
   };
 
-  const handleGuestChange = async (rowIndex, guestOf) => {
+  const handleGuestChange = async (rowIndex, invitedBy) => {
     try {
       if (updatingGuest) return;
       setUpdatingGuest(true);
-      console.log('Starting guest update:', { rowIndex, guestOf });
-  
-      // Build the URL with all parameters
-      const url = new URL(SCRIPT_URL);
-      url.searchParams.append('action', 'updateGuest');
-      url.searchParams.append('row', rowIndex);
-      url.searchParams.append('guestOf', guestOf);
+
+      console.log('------- GUEST UPDATE PROCESS START -------');
+      console.log('1. Update Request:', { rowIndex, invitedBy });
       
-      console.log('Making API call to:', url.toString());
+      const fullUrl = `${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`;
+      console.log('2. Request URL:', fullUrl);
   
-      // Make the API call
-      const response = await fetch(url, {
+      // First request with no-cors
+      await fetch(fullUrl, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        mode: 'no-cors'
       });
   
-      console.log('Response status:', response.status);
-      const responseData = await response.text();
-      console.log('Raw response:', responseData);
-  
-      // Optimistically update UI
+      // Update local state
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
-            ? { ...player, guestOf: guestOf }
+            ? { ...player, invitedBy: invitedBy }
             : player
         )
       );
-  
-      // Wait before refreshing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Refresh the list
+
+      // Wait and refresh
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await fetchWeeklyPlayers();
-      console.log('Player list refreshed');
   
     } catch (error) {
-      console.error('Error in handleGuestChange:', error);
+      console.error('CRITICAL ERROR:', error);
       alert('Failed to update guest status. Please try again.');
     } finally {
       setUpdatingGuest(false);
+      console.log('------- GUEST UPDATE PROCESS END -------');
     }
-  };
+};
 
   const handleBackToSignup = () => {
     navigate('/');
@@ -218,7 +240,7 @@ function WeeklyList() {
                     key={index}
                     data-row-index={player.rowIndex}
                     className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
-                      player.guestOf ? 'guest-row' : ''
+                      player.invitedBy ? 'guest-row' : ''
                     }`}
                     {...swipeHandlers}
                   >
@@ -227,7 +249,7 @@ function WeeklyList() {
                     <td>{player.handicap}</td>
                     <td className="guest-cell">
                       <select
-                        value={player.guestOf || ''}
+                        value={player.invitedBy || ''}
                         onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
                         className="guest-select-full"
                         disabled={updatingGuest}
