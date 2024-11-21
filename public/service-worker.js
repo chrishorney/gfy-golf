@@ -22,7 +22,7 @@ self.addEventListener('install', event => {
 
 // Fetch resources
 self.addEventListener('fetch', event => {
-  // Skip JSONP requests (they end with 'callback=...')
+  // Skip JSONP requests (they contain 'callback=' in the URL)
   if (event.request.url.includes('callback=')) {
     return;
   }
@@ -36,7 +36,6 @@ self.addEventListener('fetch', event => {
         return fetch(event.request);
       })
       .catch(() => {
-        // Handle fetch errors
         return new Response('Network error occurred', {
           status: 503,
           statusText: 'Service Unavailable'
