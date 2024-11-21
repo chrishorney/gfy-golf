@@ -12,7 +12,7 @@ function WeeklyList() {
   const [updatingGuest, setUpdatingGuest] = useState(false);
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3-ZvI7G7QyFwKojA6h93ZI2hpd94TtiRjhZ-mud_aACu4KQPp6c_5FVD3ZmTZkJDs/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwP2zYpmpp5eUagltf4B1hDgGKf7BJQC8_pw8B89QupFz7ng3ss5IWqUaT5hH5pfSxM/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -34,7 +34,18 @@ function WeeklyList() {
   const fetchWeeklyPlayers = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`);
+      const response = await fetch(`${SCRIPT_URL}?action=getWeeklyPlayers`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'omit'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
       console.log('Fetched players:', data.players);
       setPlayers(data.players || []);
@@ -100,21 +111,28 @@ function WeeklyList() {
       if (updatingGuest) return;
       setUpdatingGuest(true);
       console.log('Starting guest update:', { rowIndex, guestOf });
-
+  
+      // Build the URL with all parameters
       const url = new URL(SCRIPT_URL);
       url.searchParams.append('action', 'updateGuest');
       url.searchParams.append('row', rowIndex);
       url.searchParams.append('guestOf', guestOf);
       
       console.log('Making API call to:', url.toString());
-
+  
+      // Make the API call
       const response = await fetch(url, {
         method: 'GET',
-        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
-
-      console.log('Response received:', response);
-
+  
+      console.log('Response status:', response.status);
+      const responseData = await response.text();
+      console.log('Raw response:', responseData);
+  
+      // Optimistically update UI
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
@@ -122,11 +140,14 @@ function WeeklyList() {
             : player
         )
       );
-
+  
+      // Wait before refreshing
       await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Refresh the list
       await fetchWeeklyPlayers();
       console.log('Player list refreshed');
-
+  
     } catch (error) {
       console.error('Error in handleGuestChange:', error);
       alert('Failed to update guest status. Please try again.');
