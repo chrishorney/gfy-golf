@@ -18,7 +18,7 @@ function WeeklyList() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const longPressTimer = useRef(null);
-  const longPressTimeout = 500; // 500ms for long press
+  const longPressTimeout = 800; // Increased to 800ms for easier testing
   const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6WIq-j8mnCzGFnU6hGY0nCCMY1lxKHD98DB4lltOrx9jLMoau2BVdX4F-ZLhQn50I/exec';
@@ -186,33 +186,39 @@ function WeeklyList() {
     navigate('/');
   };
 
-  const handleTouchStart = (player) => {
+  // Prevent context menu on long press
+  const preventContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
+  const handleTouchStart = (player, e) => {
+    e.preventDefault(); // Prevent default touch behavior
+    console.log('Touch start'); // Debug log
+    
     longPressTimer.current = setTimeout(() => {
+      console.log('Long press detected'); // Debug log
       setSelectedPlayer(player);
       setShowDeletePopup(true);
-      // Add long-press visual feedback
-      document.querySelector(`[data-row-id="${player.rowIndex}"]`)?.classList.add('long-press');
     }, longPressTimeout);
   };
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e) => {
+    e.preventDefault();
+    console.log('Touch end'); // Debug log
+    
     if (longPressTimer.current) {
       clearTimeout(longPressTimer.current);
-      // Remove visual feedback
-      document.querySelectorAll('.long-press').forEach(el => el.classList.remove('long-press'));
+      longPressTimer.current = null;
     }
   };
 
   const handleDelete = async () => {
-    if (selectedPlayer) {
-      try {
-        // Your existing delete logic here
-        await deletePlayer(selectedPlayer.rowIndex);
-        setShowDeletePopup(false);
-        setSelectedPlayer(null);
-      } catch (error) {
-        console.error('Error deleting player:', error);
-      }
+    if (selectedPlayer && onDeletePlayer) {
+      await onDeletePlayer(selectedPlayer.rowIndex);
+      setShowDeletePopup(false);
+      setSelectedPlayer(null);
     }
   };
 
@@ -276,11 +282,10 @@ function WeeklyList() {
                     className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
                       player.invitedBy ? 'guest-row' : ''
                     }`}
-                    onTouchStart={() => handleTouchStart(player)}
+                    onTouchStart={(e) => handleTouchStart(player, e)}
                     onTouchEnd={handleTouchEnd}
-                    onMouseDown={() => handleTouchStart(player)}
-                    onMouseUp={handleTouchEnd}
-                    onMouseLeave={handleTouchEnd}
+                    onTouchCancel={handleTouchEnd}
+                    onContextMenu={preventContextMenu}
                   >
                     <td>{player.firstName}</td>
                     <td>{player.lastName}</td>
