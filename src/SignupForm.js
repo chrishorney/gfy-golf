@@ -13,7 +13,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTrW-39fe11vjvS0gfYqSHc8i49P3DlSRDxfdr4af6kxblVMM02vQcC25vF-miCu2Z/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAaikEUc_XaUJOF-Q0deSYOsX__gvTEtBaNVw8ctuZzAQSa5paJ8dPIjY9BL-y_m6I/exec';
 
   const handleNotificationPermission = async () => {
     try {
@@ -54,33 +54,31 @@ function SignupForm() {
     setSubmitStatus('submitting');
 
     try {
-      // Create form data
-      const formDataObj = new FormData();
-      formDataObj.append('firstName', formData.firstName);
-      formDataObj.append('lastName', formData.lastName);
-      formDataObj.append('handicap', formData.handicap);
-
-      // Create a hidden form and submit it
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = SCRIPT_URL;
-      form.target = '_blank'; // This prevents page reload
-
-      // Add form fields
-      Object.entries(formData).forEach(([key, value]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        form.appendChild(input);
+      // First check player count
+      const countResponse = await fetch(`${SCRIPT_URL}?action=getPlayerCount`, {
+        method: 'GET',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
 
-      // Add to document, submit, and remove
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
+      // Submit the form data
+      const formResponse = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'addPlayer',
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          handicap: formData.handicap
+        })
+      });
 
-      // Assume success if no error thrown
+      // Since we're using no-cors, we'll assume success if no error is thrown
       setSubmitStatus('success');
       setFormData({ firstName: '', lastName: '', handicap: '' });
       
