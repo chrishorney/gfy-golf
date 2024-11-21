@@ -22,11 +22,25 @@ self.addEventListener('install', event => {
 
 // Fetch resources
 self.addEventListener('fetch', event => {
+  // Skip JSONP requests (they end with 'callback=...')
+  if (event.request.url.includes('callback=')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Return cached version or fetch new
-        return response || fetch(event.request);
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+      .catch(() => {
+        // Handle fetch errors
+        return new Response('Network error occurred', {
+          status: 503,
+          statusText: 'Service Unavailable'
+        });
       })
   );
 });
