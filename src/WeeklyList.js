@@ -9,6 +9,7 @@ function WeeklyList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [swipedRowId, setSwipedRowId] = useState(null);
+  const [updatingGuest, setUpdatingGuest] = useState(false);
   const navigate = useNavigate();
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDlspxgS5Edpg4F0XGHzz3mpTwftM7hl7l_VgxIWgLUaM4em1-Q_wKB8YZQCHkYErf/exec';
@@ -96,13 +97,11 @@ function WeeklyList() {
 
   const handleGuestChange = async (rowIndex, invitedBy) => {
     try {
+      if (updatingGuest) return; // Prevent multiple simultaneous updates
+      setUpdatingGuest(true);
       console.log('Updating guest status:', { rowIndex, invitedBy });
 
-      const response = await fetch(`${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`, {
-        method: 'GET',
-        mode: 'no-cors',
-      });
-
+      // Optimistically update UI
       setPlayers(prevPlayers => 
         prevPlayers.map(player => 
           player.rowIndex === rowIndex 
@@ -111,13 +110,23 @@ function WeeklyList() {
         )
       );
 
-      setTimeout(() => {
-        fetchWeeklyPlayers();
-      }, 1000);
+      // Make API call
+      await fetch(`${SCRIPT_URL}?action=updateGuest&row=${rowIndex}&invitedBy=${encodeURIComponent(invitedBy)}`, {
+        method: 'GET',
+        mode: 'no-cors',
+      });
+
+      // Wait before refreshing
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Refresh the list
+      await fetchWeeklyPlayers();
 
     } catch (error) {
       console.error('Error updating guest status:', error);
       alert('Failed to update guest status. Please try again.');
+    } finally {
+      setUpdatingGuest(false);
     }
   };
 
@@ -195,6 +204,7 @@ function WeeklyList() {
                         value={player.invitedBy || ''}
                         onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
                         className="guest-select-full"
+                        disabled={updatingGuest}
                       >
                         <option value="">Not a Guest</option>
                         {players
