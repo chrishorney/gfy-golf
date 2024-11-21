@@ -122,29 +122,6 @@ function WeeklyList() {
     }
   };
 
-  const handleDelete = async (rowIndex) => {
-    if (window.confirm('Bitching out?')) {
-      try {
-        console.log('Attempting to delete row:', rowIndex);
-        
-        // First request with no-cors
-        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-
-        // Wait and refresh
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        await fetchWeeklyPlayers();
-        setSwipedRowId(null);
-
-      } catch (error) {
-        console.error('Error deleting player:', error);
-        alert('Failed to delete player. Please try again.');
-      }
-    }
-  };
-
   const handleGuestChange = async (rowIndex, invitedBy) => {
     try {
       if (updatingGuest) return;
@@ -236,11 +213,39 @@ function WeeklyList() {
     scrollStartPosition.current = null;
   };
 
-  const handleDelete = async () => {
-    if (selectedPlayer && onDeletePlayer) {
-      await onDeletePlayer(selectedPlayer.rowIndex);
-      setShowDeletePopup(false);
-      setSelectedPlayer(null);
+  const handleDelete = async (rowIndex) => {
+    try {
+      if (showDeletePopup) {
+        // Handle popup delete
+        console.log('Attempting to delete row:', selectedPlayer.rowIndex);
+        
+        // First request with no-cors
+        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${selectedPlayer.rowIndex}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+  
+        setShowDeletePopup(false);
+        setSelectedPlayer(null);
+      } else {
+        // Handle direct delete
+        console.log('Attempting to delete row:', rowIndex);
+        
+        // First request with no-cors
+        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+          method: 'GET',
+          mode: 'no-cors'
+        });
+      }
+  
+      // Wait and refresh for both cases
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await fetchWeeklyPlayers();
+      setSwipedRowId(null);
+  
+    } catch (error) {
+      console.error('Error deleting player:', error);
+      alert('Failed to delete player. Please try again.');
     }
   };
 
@@ -371,7 +376,10 @@ function WeeklyList() {
               <button className="popup-button cancel-delete" onClick={() => setShowDeletePopup(false)}>
                 Cancel
               </button>
-              <button className="popup-button confirm-delete" onClick={handleDelete}>
+              <button 
+                className="popup-button confirm-delete" 
+                onClick={() => handleDelete(selectedPlayer.rowIndex)}
+              >
                 Delete
               </button>
             </div>
