@@ -312,7 +312,7 @@ function WeeklyList() {
                           </option>
                         ))}
                       </select>
-                    </td
+                    </td>
                   </tr>
                 ))}
               </tbody>
