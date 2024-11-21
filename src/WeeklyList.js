@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSwipeable } from 'react-swipeable';
 import './WeeklyList.css';
 import WeatherWidget from './components/WeatherWidget';
 
@@ -13,7 +12,6 @@ function WeeklyList() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [swipedRowId, setSwipedRowId] = useState(null);
   const [updatingGuest, setUpdatingGuest] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
@@ -215,59 +213,27 @@ function WeeklyList() {
 
   const handleDelete = async (rowIndex) => {
     try {
-      if (showDeletePopup) {
-        // Handle popup delete
-        console.log('Attempting to delete row:', selectedPlayer.rowIndex);
-        
-        // First request with no-cors
-        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${selectedPlayer.rowIndex}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-  
-        setShowDeletePopup(false);
-        setSelectedPlayer(null);
-      } else {
-        // Handle direct delete
-        console.log('Attempting to delete row:', rowIndex);
-        
-        // First request with no-cors
-        await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
-          method: 'GET',
-          mode: 'no-cors'
-        });
-      }
-  
-      // Wait and refresh for both cases
+      console.log('Attempting to delete row:', rowIndex);
+      
+      // Make the delete request
+      await fetch(`${SCRIPT_URL}?action=deletePlayer&row=${rowIndex}`, {
+        method: 'GET',
+        mode: 'no-cors'
+      });
+
+      // Clear popup state
+      setShowDeletePopup(false);
+      setSelectedPlayer(null);
+
+      // Refresh the player list
       await new Promise(resolve => setTimeout(resolve, 1000));
       await fetchWeeklyPlayers();
-      setSwipedRowId(null);
-  
+
     } catch (error) {
       console.error('Error deleting player:', error);
       alert('Failed to delete player. Please try again.');
     }
   };
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: (eventData) => {
-      const row = eventData.event.target.closest('tr');
-      if (row) {
-        const index = parseInt(row.getAttribute('data-row-index'));
-        console.log('Swiped left on row:', index);
-        setSwipedRowId(index);
-      }
-    },
-    onSwipedRight: () => {
-      console.log('Swiped right, resetting');
-      setSwipedRowId(null);
-    },
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
-    delta: 10,
-    swipeDuration: 500,
-    touchEventOptions: { passive: false }
-  });
 
   if (loading) return <div className="loading">Loading players...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -301,14 +267,12 @@ function WeeklyList() {
                   <th>Team</th>
                 </tr>
               </thead>
-              <tbody {...swipeHandlers}>
+              <tbody>
                 {groupPlayersByTeam(players).map((player, index) => (
                   <tr 
                     key={index}
                     data-row-index={player.rowIndex}
-                    className={`player-row ${swipedRowId === player.rowIndex ? 'swiped' : ''} ${
-                      player.invitedBy ? 'guest-row' : ''
-                    }`}
+                    className={`player-row ${player.invitedBy ? 'guest-row' : ''}`}
                     onTouchStart={(e) => handleTouchStart(player, e)}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
@@ -348,15 +312,7 @@ function WeeklyList() {
                           </option>
                         ))}
                       </select>
-                    </td>
-                    <div className="delete-action">
-                      <button 
-                        onClick={() => handleDelete(player.rowIndex)}
-                        className="delete-button"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                    </td
                   </tr>
                 ))}
               </tbody>
