@@ -396,3 +396,23 @@
   .last-signup td select {
     color: initial;
   }
+
+  /* Add these specific rules */
+.weekly-list-container table tbody tr.last-signup td {
+    color: #ff6b6b !important;
+    font-weight: 500 !important;
+  }
+  
+  .weekly-list-container table tbody tr.last-signup td select {
+    color: initial !important;
+  }
+  
+  /* If you want to try a different shade of red, you could use: */
+  .weekly-list-container table tbody tr.last-signup td {
+    color: #ff4444 !important; /* Brighter red */
+    /* or */
+    color: #dc3545 !important; /* Bootstrap danger red */
+    /* or */
+    color: #ff0000 !important; /* Pure red */
+    font-weight: 500 !important;
+  }

@@ -283,7 +283,14 @@ function WeeklyList() {
                 </tr>
               </thead>
               <tbody>
-                {groupPlayersByTeam(players).map((player, index) => (
+              {groupPlayersByTeam(players).map((player, index) => {
+                // Move these declarations inside the arrow function block
+                const latestTimestamp = Math.max(...players.map(p => new Date(p.timestamp).getTime()));
+                const isLatest = new Date(player.timestamp).getTime() === latestTimestamp;
+                
+                console.log('Player:', player.firstName, 'Timestamp:', player.timestamp, 'Is Latest:', isLatest);
+                
+                return (
                   <tr 
                     key={index}
                     data-row-index={player.rowIndex}
