@@ -6,113 +6,114 @@ function WeatherWidget() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const WEATHER_API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
   const MCKINNEY_LAT = '33.1972';
   const MCKINNEY_LONG = '-96.6397';
-  const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-  const TARGET_HOUR = 13; // 1 PM in 24-hour format
 
   useEffect(() => {
     const getFridayWeather = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${MCKINNEY_LAT}&lon=${MCKINNEY_LONG}&appid=${API_KEY}&units=imperial`
-        );
         
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        // Get current date and determine target Friday
+        const now = new Date();
+        let targetFriday = new Date();
+        
+        // If it's past Friday or Friday after 12 PM, get next Friday
+        if (now.getDay() > 5 || (now.getDay() === 5 && now.getHours() >= 12)) {
+          targetFriday.setDate(now.getDate() + ((7 - now.getDay() + 5) % 7));
+        } else if (now.getDay() < 5) {
+          // Get this coming Friday
+          targetFriday.setDate(now.getDate() + (5 - now.getDay()));
         }
         
+        // Set time to 12:00 PM
+        targetFriday.setHours(12, 0, 0, 0);
+        
+        // Get 5-day forecast
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${MCKINNEY_LAT}&lon=${MCKINNEY_LONG}&appid=${WEATHER_API_KEY}&units=imperial`
+        );
         const data = await response.json();
 
-        // Get next Friday's date
-        const today = new Date();
-        const nextFriday = new Date();
-        nextFriday.setDate(today.getDate() + ((7 - today.getDay() + 5) % 7 || 7));
-        nextFriday.setHours(TARGET_HOUR, 0, 0, 0);
-
-        console.log('Looking for forecast for:', nextFriday);
-
-        // Find forecast closest to next Friday at 3 PM
+        // Find forecast closest to target Friday at 12 PM
+        const targetTimestamp = Math.floor(targetFriday.getTime() / 1000);
         const fridayForecast = data.list.reduce((closest, current) => {
-          const forecastDate = new Date(current.dt * 1000);
-          const closestDate = closest ? new Date(closest.dt * 1000) : null;
-          
-          // Only consider forecasts on Friday
-          if (forecastDate.getDay() !== 5) return closest;
-          
-          // If we don't have a closest yet, use this one
-          if (!closest) return current;
-          
-          // Calculate time differences
-          const currentDiff = Math.abs(forecastDate.getHours() - TARGET_HOUR);
-          const closestDiff = Math.abs(closestDate.getHours() - TARGET_HOUR);
-          
+          const currentDiff = Math.abs(current.dt - targetTimestamp);
+          const closestDiff = Math.abs(closest.dt - targetTimestamp);
           return currentDiff < closestDiff ? current : closest;
-        }, null);
-
-        console.log('Found forecast:', fridayForecast);
+        });
 
         if (fridayForecast) {
-          const forecastDate = new Date(fridayForecast.dt * 1000);
           setWeather({
             temp: Math.round(fridayForecast.main.temp),
             feels_like: Math.round(fridayForecast.main.feels_like),
             description: fridayForecast.weather[0].main,
             icon: fridayForecast.weather[0].icon,
             wind: Math.round(fridayForecast.wind.speed),
-            precipitation: Math.round(fridayForecast.pop * 100),
-            date: forecastDate.toLocaleDateString(),
-            time: forecastDate.toLocaleTimeString([], { 
-              hour: 'numeric', 
+            precipitation: fridayForecast.pop * 100, // Probability of precipitation
+            date: new Date(fridayForecast.dt * 1000).toLocaleDateString('en-US', {
+              weekday: 'long',
+              month: 'long',
+              day: 'numeric'
+            }),
+            time: new Date(fridayForecast.dt * 1000).toLocaleTimeString('en-US', {
+              hour: 'numeric',
               minute: '2-digit'
             })
           });
-        } else {
-          throw new Error('No forecast found for Friday');
         }
-        
         setError(null);
+
+        // Schedule next update at midnight
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
+        const timeUntilMidnight = tomorrow - now;
+
+        setTimeout(() => {
+          getFridayWeather();
+        }, timeUntilMidnight);
+
       } catch (err) {
+        setError('Failed to load weather');
         console.error('Weather fetch error:', err);
-        setError(`Failed to load weather: ${err.message}`);
       } finally {
         setLoading(false);
       }
     };
 
-    if (API_KEY) {
-      getFridayWeather();
-    } else {
-      setError('Weather API key not found');
-      setLoading(false);
-    }
-  }, [API_KEY]);
+    getFridayWeather();
+
+    // Cleanup timeout on component unmount
+    return () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      const timeUntilMidnight = tomorrow - now;
+      clearTimeout(timeUntilMidnight);
+    };
+  }, []);
 
   if (loading) return <div className="weather-widget loading">Loading weather...</div>;
-  if (error) return (
-    <div className="weather-widget error">
-      <p>{error}</p>
-      <p className="error-details">Please try refreshing the page</p>
-    </div>
-  );
+  if (error) return <div className="weather-widget error">{error}</div>;
   if (!weather) return null;
 
   return (
     <div className="weather-widget">
       <h3>Friday's Golf Weather</h3>
-      <div className="weather-date">
-        {weather.date} at {weather.time}
-      </div>
       <div className="weather-content">
         <img 
-          src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+          src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`}
           alt={weather.description}
         />
         <div className="weather-details">
           <div className="temperature">{weather.temp}°F</div>
           <div className="description">{weather.description}</div>
           <div className="extra-details">
+            {weather.date} at {weather.time}
+            <br />
             Feels like: {weather.feels_like}°F
             <br />
             Wind: {weather.wind} mph
