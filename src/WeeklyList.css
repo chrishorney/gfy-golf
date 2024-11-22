@@ -266,49 +266,21 @@
     font-family: 'Arial', sans-serif;
   }
   
-  /* Golf Ball Loading Animation */
-  .golf-club-loader {
-    position: relative;
-    width: 100px;
-    height: 100px;
-  }
-  
-  .club {
-    position: absolute;
-    width: 8px;
-    height: 60px;
-    background: #333;
-    transform-origin: bottom;
-    animation: swing 1.5s infinite;
-  }
-  
-  .ball {
-    position: absolute;
-    bottom: 0;
-    left: 40px;
+  .bouncing-ball {
     width: 20px;
     height: 20px;
     background: white;
     border: 2px solid #333;
     border-radius: 50%;
-    animation: roll 1.5s infinite;
+    margin-bottom: 20px;
+    animation: simpleBounce 0.5s infinite alternate;
   }
   
-  @keyframes swing {
-    0% { transform: rotate(-45deg); }
-    25% { transform: rotate(90deg); }
-    50% { transform: rotate(90deg); }
-    75% { transform: rotate(-45deg); }
-    100% { transform: rotate(-45deg); }
+  @keyframes simpleBounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-30px); }
   }
   
-  @keyframes roll {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(0); }
-    50% { transform: translateX(100px); }
-    75% { transform: translateX(100px); }
-    100% { transform: translateX(0); }
-  }
   
   /* Loading text style */
   .loading-container p {
