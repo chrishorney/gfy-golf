@@ -164,9 +164,15 @@ function WeeklyList() {
   };
 
   // Prevent context menu on long press
-  const preventContextMenu = (e) => {
+  const preventContextMenu = (e, player) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Check if it's a desktop device (not touch)
+    if (!('ontouchstart' in window)) {
+      setSelectedPlayer(player);
+      setShowDeletePopup(true);
+    }
     return false;
   };
 
@@ -286,7 +292,7 @@ function WeeklyList() {
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
                     onTouchCancel={handleTouchEnd}
-                    onContextMenu={preventContextMenu}
+                    onContextMenu={(e) => preventContextMenu(e, player)}
                   >
                     <td>{player.firstName}</td>
                     <td>{player.lastName}</td>
