@@ -283,64 +283,63 @@ function WeeklyList() {
                 </tr>
               </thead>
               <tbody>
-              {groupPlayersByTeam(players).map((player, index) => {
-                // Move these declarations inside the arrow function block
-                const latestTimestamp = Math.max(...players.map(p => new Date(p.timestamp).getTime()));
-                const isLatest = new Date(player.timestamp).getTime() === latestTimestamp;
-                
-                console.log('Player:', player.firstName, 'Timestamp:', player.timestamp, 'Is Latest:', isLatest);
-                
-                return (
-                  <tr 
-                    key={index}
-                    data-row-index={player.rowIndex}
-                    className={`player-row 
-                      ${player.invitedBy ? 'guest-row' : ''} 
-                      ${new Date(player.timestamp).getTime() === Math.max(...players.map(p => new Date(p.timestamp).getTime())) ? 'last-signup' : ''}`
-                    }
-                    onTouchStart={(e) => handleTouchStart(player, e)}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                    onTouchCancel={handleTouchEnd}
-                    onContextMenu={(e) => preventContextMenu(e, player)}
-                  >
-                    <td>{player.firstName}</td>
-                    <td>{player.lastName}</td>
-                    <td>{player.handicap}</td>
-                    <td className="guest-cell">
-                      <select
-                        value={player.invitedBy || ''}
-                        onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
-                        className="guest-select-full"
-                        disabled={updatingGuest}
-                      >
-                        <option value="">Not a Guest</option>
-                        {players
-                          .filter(p => !p.invitedBy)
-                          .map(member => (
-                            <option key={member.rowIndex} value={member.firstName + ' ' + member.lastName}>
-                              {member.firstName} {member.lastName}
-                            </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="team-cell">
-                      <select
-                        value={player.team || ''}
-                        onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
-                        className="team-select-full"
-                      >
-                        <option value="">Select Team</option>
-                        {teamNumbers.map(num => (
-                          <option key={num} value={num}>
-                            Team {num}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {groupPlayersByTeam(players).map((player, index) => {
+    const latestTimestamp = Math.max(...players.map(p => new Date(p.timestamp).getTime()));
+    const isLatest = new Date(player.timestamp).getTime() === latestTimestamp;
+    
+    console.log('Player:', player.firstName, 'Timestamp:', player.timestamp, 'Is Latest:', isLatest);
+    
+    return (
+      <tr 
+        key={index}
+        data-row-index={player.rowIndex}
+        className={`player-row 
+          ${player.invitedBy ? 'guest-row' : ''} 
+          ${isLatest ? 'last-signup' : ''}`}
+        onTouchStart={(e) => handleTouchStart(player, e)}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        onContextMenu={(e) => preventContextMenu(e, player)}
+      >
+        <td>{player.firstName}</td>
+        <td>{player.lastName}</td>
+        <td>{player.handicap}</td>
+        <td className="guest-cell">
+          <select
+            value={player.invitedBy || ''}
+            onChange={(e) => handleGuestChange(player.rowIndex, e.target.value)}
+            className="guest-select-full"
+            disabled={updatingGuest}
+          >
+            <option value="">Not a Guest</option>
+            {players
+              .filter(p => !p.invitedBy)
+              .map(member => (
+                <option key={member.rowIndex} value={member.firstName + ' ' + member.lastName}>
+                  {member.firstName} {member.lastName}
+                </option>
+              ))}
+          </select>
+        </td>
+        <td className="team-cell">
+          <select
+            value={player.team || ''}
+            onChange={(e) => handleTeamChange(player.rowIndex, e.target.value)}
+            className="team-select-full"
+          >
+            <option value="">Select Team</option>
+            {teamNumbers.map(num => (
+              <option key={num} value={num}>
+                Team {num}
+              </option>
+            ))}
+          </select>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
             </table>
           )}
         </div>
