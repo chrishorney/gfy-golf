@@ -255,3 +255,64 @@
     user-select: none;
     -webkit-touch-callout: none;
 }
+
+/* Common styles */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Golf Ball Loading Animation */
+  .golf-ball-loader {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+  }
+  
+  .golf-ball {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid #333;
+    animation: bounce 1s infinite;
+  }
+  
+  .shadow {
+    position: absolute;
+    bottom: 0;
+    width: 30px;
+    height: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    animation: shadow 1s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+  }
+  
+  @keyframes shadow {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(0.8); opacity: 0.2; }
+  }
+  
+  /* Loading text style */
+  .loading-container p {
+    color: #333;
+    font-size: 1.2em;
+    margin-top: 20px;
+    animation: fadeInOut 2s infinite;
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }

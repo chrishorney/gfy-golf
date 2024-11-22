@@ -235,7 +235,16 @@ function WeeklyList() {
     }
   };
 
-  if (loading) return <div className="loading">Loading players...</div>;
+  if (loading) return (
+    <div className="loading-container">
+      <div className="golf-ball-loader">
+        <div className="golf-ball"></div>
+        <div className="shadow"></div>
+      </div>
+      <p>Loading players...</p>
+    </div>
+  );
+  //if (loading) return <div className="loading">Loading players...</div>; Remove if loading animation works
   if (error) return <div className="error">{error}</div>;
 
   return (
