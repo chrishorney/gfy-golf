@@ -387,3 +387,12 @@
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
   }
+
+  .last-signup td {
+    color: #ff6b6b;
+    font-weight: 500;
+  }
+  
+  .last-signup td select {
+    color: initial;
+  }

@@ -287,7 +287,10 @@ function WeeklyList() {
                   <tr 
                     key={index}
                     data-row-index={player.rowIndex}
-                    className={`player-row ${player.invitedBy ? 'guest-row' : ''}`}
+                    className={`player-row 
+                      ${player.invitedBy ? 'guest-row' : ''} 
+                      ${player.timestamp === Math.max(...players.map(p => new Date(p.timestamp).getTime())) ? 'last-signup' : ''}`
+                    }
                     onTouchStart={(e) => handleTouchStart(player, e)}
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleTouchEnd}
