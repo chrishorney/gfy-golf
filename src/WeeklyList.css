@@ -266,6 +266,22 @@
     font-family: 'Arial', sans-serif;
   }
   
+ /* Common styles */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version */
+  }
+  
   /* Golf Ball Loading Animation */
   .golf-ball-loader {
     position: relative;
@@ -281,6 +297,9 @@
     background: white;
     border-radius: 50%;
     border: 2px solid #333;
+    -webkit-animation: bounce 1s infinite;
+    -moz-animation: bounce 1s infinite;
+    -o-animation: bounce 1s infinite;
     animation: bounce 1s infinite;
   }
   
@@ -291,12 +310,46 @@
     height: 4px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 50%;
+    -webkit-animation: shadow 1s infinite;
+    -moz-animation: shadow 1s infinite;
+    -o-animation: shadow 1s infinite;
     animation: shadow 1s infinite;
+  }
+  
+  /* Keyframes with vendor prefixes */
+  @-webkit-keyframes bounce {
+    0%, 100% { -webkit-transform: translateY(0); }
+    50% { -webkit-transform: translateY(-30px); }
+  }
+  
+  @-moz-keyframes bounce {
+    0%, 100% { -moz-transform: translateY(0); }
+    50% { -moz-transform: translateY(-30px); }
+  }
+  
+  @-o-keyframes bounce {
+    0%, 100% { -o-transform: translateY(0); }
+    50% { -o-transform: translateY(-30px); }
   }
   
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-30px); }
+  }
+  
+  @-webkit-keyframes shadow {
+    0%, 100% { -webkit-transform: scale(1); opacity: 0.4; }
+    50% { -webkit-transform: scale(0.8); opacity: 0.2; }
+  }
+  
+  @-moz-keyframes shadow {
+    0%, 100% { -moz-transform: scale(1); opacity: 0.4; }
+    50% { -moz-transform: scale(0.8); opacity: 0.2; }
+  }
+  
+  @-o-keyframes shadow {
+    0%, 100% { -o-transform: scale(1); opacity: 0.4; }
+    50% { -o-transform: scale(0.8); opacity: 0.2; }
   }
   
   @keyframes shadow {
@@ -309,7 +362,25 @@
     color: #333;
     font-size: 1.2em;
     margin-top: 20px;
+    -webkit-animation: fadeInOut 2s infinite;
+    -moz-animation: fadeInOut 2s infinite;
+    -o-animation: fadeInOut 2s infinite;
     animation: fadeInOut 2s infinite;
+  }
+  
+  @-webkit-keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  @-moz-keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  @-o-keyframes fadeInOut {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
   }
   
   @keyframes fadeInOut {
