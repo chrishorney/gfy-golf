@@ -21,7 +21,7 @@ function WeeklyList() {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollStartPosition = useRef(null);
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwAaikEUc_XaUJOF-Q0deSYOsX__gvTEtBaNVw8ctuZzAQSa5paJ8dPIjY9BL-y_m6I/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYh5VTVOouNTaFchj5GrBSt7YWQ6YrkKWhiXaNqGVtkbX9dhG8TTxhs9OHDLrJpbED/exec';
 
   // Create array of team numbers 1-10
   const teamNumbers = Array.from({ length: 10 }, (_, i) => i + 1);
