@@ -13,7 +13,7 @@ function SignupForm() {
   const [submitStatus, setSubmitStatus] = useState('');
   const navigate = useNavigate();
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYh5VTVOouNTaFchj5GrBSt7YWQ6YrkKWhiXaNqGVtkbX9dhG8TTxhs9OHDLrJpbED/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZMvSI3pmcnM6h4ULjt7BOUK2dPuXui446bV2rgyLyfemPdlSjNzAjL177h5pae1ed/exec';
 
   const handleNotificationPermission = async () => {
     try {
