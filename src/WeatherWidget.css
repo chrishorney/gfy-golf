@@ -1,56 +1,57 @@
 .weather-widget {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 15px;
-    margin: 10px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
-    margin: 0 auto 20px;
-  }
-  
-  .weather-widget h3 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 1.2em;
-    text-align: center;
-  }
-  
-  .weather-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .weather-details {
-    text-align: center;
-  }
-  
-  .temperature {
-    font-size: 2em;
-    font-weight: bold;
-    color: #2c5282;
-  }
-  
-  .description {
-    text-transform: capitalize;
-    margin: 5px 0;
-    color: #4a5568;
-  }
-  
-  .extra-details {
-    font-size: 0.9em;
-    color: #718096;
-    line-height: 1.4;
-  }
-  
-  .weather-widget.loading,
-  .weather-widget.error {
-    text-align: center;
-    color: #718096;
-    padding: 20px;
-  }
-  
-  .weather-widget img {
-    width: 80px;
-    height: 80px;
-  }
+  background: rgba(236, 240, 233, 0.95); /* Light green-tinted background */
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  margin: 0 auto 20px;
+  border: 1px solid #c5d1c0; /* Subtle green border */
+}
+
+.weather-widget h3 {
+  margin: 0 0 10px 0;
+  color: #2c5530; /* Dark green */
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.weather-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-details {
+  text-align: center;
+}
+
+.temperature {
+  font-size: 2em;
+  font-weight: bold;
+  color: #1a472a; /* Rich forest green */
+}
+
+.description {
+  text-transform: capitalize;
+  margin: 5px 0;
+  color: #2d5a27; /* Medium green */
+}
+
+.extra-details {
+  font-size: 0.9em;
+  color: #446850; /* Muted green */
+  line-height: 1.4;
+}
+
+.weather-widget.loading,
+.weather-widget.error {
+  text-align: center;
+  color: #446850;
+  padding: 20px;
+}
+
+.weather-widget img {
+  width: 80px;
+  height: 80px;
+}
